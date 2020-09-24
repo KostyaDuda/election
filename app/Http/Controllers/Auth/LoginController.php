@@ -40,15 +40,12 @@ class LoginController extends Controller
     }
     public function login(Request $request)
     {
-        // if($this->validateLogin($request))
-        // {
-        //     //return redirect()->route('home');
-        //     dd("fuck");
-        // }
 
         if(! auth()->attempt(request(['name','password'])))
         {
-            return back();
+            return back()->withErrors([
+                'message' => 'Wooops smt go wrong'
+            ]);
         }
         return redirect()->route('home');
         

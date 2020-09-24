@@ -36,6 +36,21 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
+                                @if (count($errors))
+                               
+                                  @foreach ($errors->all() as $error)
+                                    
+                                
+                                        <div class="ui-widget">
+	                                         <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+		                                          <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+		                                                <strong>Alert:</strong> {{ $error }}</p>
+	                                          </div>
+                                         </div>
+                                    @endforeach
+                                    
+                                    @endif
+
                             </div>
                         </div>
 
