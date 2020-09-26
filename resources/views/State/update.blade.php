@@ -40,6 +40,10 @@ div {
   @method('PUT')
   @csrf
   <div class="form-group">
+    <label for="exampleInputEmail1">Номер Оругу</label>
+         <input type="number" name="number" id="number" class="form-control" id="exampleInputEmail1"  value="{{$state->number}}" required autocomplete="number">
+  </div>
+  <div class="form-group">
     <label for="exampleInputEmail1">Назва Округу</label>
          <input type="text" name="name" id="name" class="form-control" id="exampleInputEmail1" value="{{$state->name}}" required autocomplete="name">
   </div>

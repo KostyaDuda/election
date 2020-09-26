@@ -17,7 +17,7 @@
         <tbody>
         @foreach($states as $state)
         <tr>
-           <th scope="row">{{$state->id}}</th>
+           <th scope="row">{{$state->number}}</th>
                <td>{{$state->name}}</td>
                <td><a href="{{route('states.edit', $state)}}" class="btn btn-outline-success">Редагувати</a></td>
                <td>

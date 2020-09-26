@@ -39,8 +39,12 @@ div {
   <form method="POST" enctype="multipart/form-data" action="{{route('states.store')}}">
   @csrf
   <div class="form-group">
+    <label for="exampleInputEmail1">Номер Оругу</label>
+         <input type="number" name="number" id="number" class="form-control" id="exampleInputEmail1"  required autocomplete="number">
+  </div>
+  <div class="form-group">
     <label for="exampleInputEmail1">Назва Округу</label>
-         <input type="text" name="name" id="name" class="form-control" id="exampleInputEmail1" required autocomplete="name">
+         <input type="text" name="name" id="name" class="form-control" id="exampleInputEmail1" value="Округ №" required autocomplete="name">
   </div>
   <button type="submit" class="btn btn-primary btn-warning">Ввести</button>
   </form>
