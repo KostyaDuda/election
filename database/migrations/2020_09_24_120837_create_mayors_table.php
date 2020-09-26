@@ -22,6 +22,8 @@ class CreateMayorsTable extends Migration
             $table->date('date');
             $table->integer('votes')->default(NULL);
             $table->float('rate')->default(NULL);
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
            
         });
     }

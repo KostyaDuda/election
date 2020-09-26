@@ -1,27 +1,28 @@
 <?php
 
-namespace App\Http\Controllers\Mayor;
+namespace App\Http\Controllers\Party;
 
-use App\Mayor;
 use App\Party;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class MayorController extends Controller
+class PartyController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
     public function __construct()
     {
         $this->middleware('auth');
     }
+    
     public function index()
     {
-        $mayors=Mayor::all();
-        return view('Mayor/index',compact('mayors'));
+        $parties=Party::all();
+        return view('Party/index',compact('parties'));
     }
 
     /**
@@ -31,8 +32,7 @@ class MayorController extends Controller
      */
     public function create()
     {
-        $parties=Party::all();
-        return view('Mayor/create', compact('parties'));
+        return view('Party/create');
     }
 
     /**
@@ -43,17 +43,17 @@ class MayorController extends Controller
      */
     public function store(Request $request)
     {
-        Mayor::create($request->all());
-        return redirect()->route('mayors.index');
+        Party::create($request->all());
+        return redirect()->route('parties.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Mayor  $mayor
+     * @param  \App\Party  $party
      * @return \Illuminate\Http\Response
      */
-    public function show(Mayor $mayor)
+    public function show(Party $party)
     {
         //
     }
@@ -61,38 +61,36 @@ class MayorController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Mayor  $mayor
+     * @param  \App\Party  $party
      * @return \Illuminate\Http\Response
      */
-    public function edit(Mayor $mayor)
+    public function edit(Party $party)
     {
-        $parties=Party::all();
-        return view('Mayor/update',compact('mayor','parties'));
+        return view('Party/update',compact('party'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Mayor  $mayor
+     * @param  \App\Party  $party
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Mayor $mayor)
+    public function update(Request $request, Party $party)
     {
-        $mayor->update($request->all());
-        return redirect()->route('mayors.index');
-
+        $party->update($request->all());
+        return redirect()->route('parties.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Mayor  $mayor
+     * @param  \App\Party  $party
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Mayor $mayor)
+    public function destroy(Party $party)
     {
-        $mayor->delete();
-        return redirect()->route('mayors.index');
+        $party->delete();
+        return redirect()->route('parties.index');
     }
 }

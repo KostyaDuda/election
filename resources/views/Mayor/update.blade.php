@@ -59,11 +59,14 @@ div {
   <label for="exampleFormControlSelect1">Партійність</label>
     <select name="party_affiliation" id="party_affiliation" class="form-control" value="{{$mayor->party_affiliation}}" id="exampleFormControlSelect1">
       <option value="Самовисуванець" >Самовисуванець</option>
-      <option value="ВО Свобода">ВО Свобода</option>
+      @foreach($parties as $party)
+                <option value="{{ $party->name }}" {{ $party->name == $mayor->party_affiliation ? 'selected' : '' }}>{{ $party->name }}</option>
+            @endforeach
+      <!-- <option value="ВО Свобода">ВО Свобода</option>
       <option value="Слуга Народу">Слуга Народу</option>
       <option value="Батьківщина">Батьківщина</option>
       <option value="Європейська Солідарність">Європейська Солідарність</option>
-      <option value="Голос">Голос</option>
+      <option value="Голос">Голос</option> -->
     </select>
   </div>
   <button type="submit" class="btn btn-primary btn-warning">Ввести</button>
