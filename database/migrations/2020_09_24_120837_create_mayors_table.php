@@ -15,12 +15,13 @@ class CreateMayorsTable extends Migration
     {
         Schema::create('mayors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('second_name');
+            $table->string('father_name');
             $table->string('party_affiliation');
             $table->date('date');
-            $table->integer('votes');
-            $table->float('rate');
-            $table->string('image');
+            $table->integer('votes')->default(NULL);
+            $table->float('rate')->default(NULL);
            
         });
     }
