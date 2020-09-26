@@ -18,5 +18,5 @@ Route::get('/', function () {
 Auth::routes();
 Route::resource('mayors','Mayor\MayorController');
 Route::resource('parties','Party\PartyController');
-
+Route::resource('states','State\StateController');
 Route::get('/home', 'HomeController@index')->name('home');
