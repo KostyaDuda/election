@@ -33,7 +33,7 @@ class DistrictController extends Controller
      */
     public function create()
     {
-        $state_ = null;
+        $state_ = new State;
         $staties=State::all();
         return view('District/create', compact('staties','state_'));
     }

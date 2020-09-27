@@ -55,7 +55,7 @@ div {
     <label for="exampleInputEmail1">Округ</label>
     <select name="state_id" id="state_id" class="form-control" id="exampleFormControlSelect1">
       @foreach($staties as $state)
-                <option value="{{ $state->id }}">{{ $state->name }}</option>
+                <option value="{{ $state->id }}" {{ $state->id == $state_->id ? 'selected' : '' }}>{{ $state->name }}</option>
             @endforeach
     </select>
   </div>
