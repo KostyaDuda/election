@@ -19,4 +19,5 @@ Auth::routes();
 Route::resource('mayors','Mayor\MayorController');
 Route::resource('parties','Party\PartyController');
 Route::resource('states','State\StateController');
+Route::resource('districts','District\DistrictController');
 Route::get('/home', 'HomeController@index')->name('home');
