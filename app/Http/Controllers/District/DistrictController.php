@@ -33,8 +33,15 @@ class DistrictController extends Controller
      */
     public function create()
     {
+        $state_ = null;
         $staties=State::all();
-        return view('District/create', compact('staties'));
+        return view('District/create', compact('staties','state_'));
+    }
+
+    public function create_(State $state_)
+    {
+        $staties=State::all();
+        return view('District/create', compact('staties','state_'));
     }
 
     /**
@@ -45,6 +52,7 @@ class DistrictController extends Controller
      */
     public function store(Request $request)
     {
+
         District::create($request->all());
         return redirect()->route('districts.create');
     }

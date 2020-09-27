@@ -4,7 +4,7 @@
 @section('content')
 
  <div class="container">
- <h1>Виборчі Дільниці<img width="100px" src="img/tent.png"><a href="{{route('districts.create')}}" class="btn btn-warning">Створити дільницю</a></h1>
+ <h1>{{$state->name}}<img width="100px" src="http://election/img/tent.png"><a href="{{route('districts.create_',$state)}}" class="btn btn-success">Додати Дільницю</a><a href="{{route('states.destroy_all',$state)}}" class="btn btn-danger">Видалити всі дільниці округу</a></h1>
       <table class="table">
         <thead class="thead-inverse">
        <tr>
@@ -13,7 +13,6 @@
          <th>Тип</th>
          <th>Округ</th>
          <th>Адреса</th>
-         <th></th>
          <th></th>
          <th></th>
 
@@ -27,7 +26,6 @@
                <td>{{$district->type}}</td>
                <td>{{$district->getState()->name}}</td>
                <td>{{$district->adress}}</td>
-               <td><a href="/repair" class="btn btn-outline-warning">Склад ДВК</a></td>
                <td><a href="{{route('districts.edit',$district)}}" class="btn btn-outline-success">Редагувати</a></td>
                <td>
                <form action="{{route('districts.destroy',$district)}}" method="POST">

@@ -26,7 +26,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ url('/home') }}">
                     Місцеві Вибори
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -36,6 +36,26 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
+                        @if (Route::has('register'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('states.index') }}">Округи</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('districts.index') }}">Дільниці</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('mayors.index') }}">Мери</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('parties.index') }}">Партії</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/repair">Кандидати</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/repair">Голосування</a>
+                            </li>
+                         @endif
 
                     </ul>
 
@@ -44,11 +64,11 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('login') }}">{{ __('Увійти') }}</a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Реєстрація') }}</a>
                                 </li>
                             @endif
                         @else
@@ -61,7 +81,7 @@
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('Вийти') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

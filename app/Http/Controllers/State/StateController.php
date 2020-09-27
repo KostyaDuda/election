@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\State;
 
 use App\State;
+use App\District;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -54,7 +55,8 @@ class StateController extends Controller
      */
     public function show(State $state)
     {
-        //
+        $districts = District::where('state_id',$state->id)->get();
+        return view('State/show', compact('state','districts'));
     }
 
     /**
@@ -89,7 +91,16 @@ class StateController extends Controller
      */
     public function destroy(State $state)
     {
-        $state->delete();
+            $state->delete();
+            return redirect()->route('states.index');
+    }
+    public function destroy_all(State $state)
+    {
+        $districts = District::where('state_id',$state->id)->get();
+        foreach($districts as $district)
+        {
+            $district->delete();
+        }
         return redirect()->route('states.index');
     }
 }
