@@ -33,15 +33,13 @@ class DistrictController extends Controller
      */
     public function create()
     {
-        $state_ = new State;
         $staties=State::all();
-        return view('District/create', compact('staties','state_'));
+        return view('District/create', compact('staties'));
     }
 
     public function create_(State $state_)
     {
-        $staties=State::all();
-        return view('District/create', compact('staties','state_'));
+        return view('District/createByState', compact('state_'));
     }
 
     /**
@@ -52,7 +50,13 @@ class DistrictController extends Controller
      */
     public function store(Request $request)
     {
-
+        $check = District::where('id',$request->id)->count();
+        if($check > 0)
+        {
+            return back()->withErrors([
+                'message' => 'Така дільниця є в реєстрі'
+            ]);
+        }
         District::create($request->all());
         return redirect()->route('districts.create');
     }

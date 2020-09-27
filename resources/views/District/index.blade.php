@@ -8,7 +8,6 @@
       <table class="table">
         <thead class="thead-inverse">
        <tr>
-         <th>#</th>
          <th>Назва</th>
          <th>Тип</th>
          <th>Округ</th>
@@ -23,7 +22,6 @@
         @foreach($districts as $district)
         <tr>
            <th scope="row">{{$district->id}}</th>
-               <td>{{$district->name}}</td>
                <td>{{$district->type}}</td>
                <td>{{$district->getState()->name}}</td>
                <td>{{$district->adress}}</td>

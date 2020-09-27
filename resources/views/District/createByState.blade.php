@@ -40,7 +40,7 @@ div {
   @csrf
   <div class="form-group">
     <label for="exampleInputEmail1">Назва</label>
-         <input type="number" name="id" id="id" class="form-control" id="exampleInputEmail1 " required autocomplete="id">
+         <input type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==6) return false;" name="id" id="id" class="form-control" id="exampleInputEmail1 " required autocomplete="id">
 
          @foreach ($errors->all() as $error)                             
                                         <div class="ui-widget">
@@ -50,6 +50,7 @@ div {
 	                                          </div>
                                          </div>
                                     @endforeach
+
   </div>
   <div class="form-group">
     <label for="exampleInputEmail1">Тип</label>
@@ -63,9 +64,7 @@ div {
   <div class="form-group">
     <label for="exampleInputEmail1">Округ</label>
     <select name="state_id" id="state_id" class="form-control" id="exampleFormControlSelect1">
-      @foreach($staties as $state)
-                <option value="{{ $state->id }}">{{ $state->name }}</option>
-            @endforeach
+                <option value="{{ $state_->id }}">{{ $state_->name }}</option>
     </select>
   </div>
   <div class="form-group">
