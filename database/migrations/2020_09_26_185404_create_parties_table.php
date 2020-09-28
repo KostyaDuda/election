@@ -16,6 +16,7 @@ class CreatePartiesTable extends Migration
         Schema::create('parties', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->string('type');
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

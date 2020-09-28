@@ -9,6 +9,7 @@
        <tr>
          <th>#</th>
          <th>Назва</th>
+         <th>Тип Територіального Голосування</th>
          <th></th>
          <th></th>
 
@@ -19,6 +20,7 @@
         <tr>
            <th scope="row">{{$party->id}}</th>
                <td>{{$party->name}}</td>
+               <td>{{$party->type}}</td>
                <td><a href="{{route('parties.edit', $party)}}" class="btn btn-outline-success">Редагувати</a></td>
                <td>
                <form action="{{route('parties.destroy',$party)}}" method="POST">

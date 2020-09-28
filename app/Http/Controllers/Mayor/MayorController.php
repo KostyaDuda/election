@@ -31,8 +31,7 @@ class MayorController extends Controller
      */
     public function create()
     {
-        $parties=Party::all();
-        return view('Mayor/create', compact('parties'));
+        return view('Mayor/create');
     }
 
     /**

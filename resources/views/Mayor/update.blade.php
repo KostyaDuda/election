@@ -57,12 +57,7 @@ div {
   </div>
   <div class="form-group">
   <label for="exampleFormControlSelect1">Партійність</label>
-    <select name="party_affiliation" id="party_affiliation" class="form-control" value="{{$mayor->party_affiliation}}" id="exampleFormControlSelect1">
-      <option value="Самовисуванець" >Самовисуванець</option>
-      @foreach($parties as $party)
-                <option value="{{ $party->name }}" {{ $party->name == $mayor->party_affiliation ? 'selected' : '' }}>{{ $party->name }}</option>
-            @endforeach
-    </select>
+  <input type="text" name="party_affiliation" id="party_affiliation" class="form-control datetimepicker" value="{{$mayor->party_affiliation}}" required> 
   </div>
   <button type="submit" class="btn btn-primary btn-warning">Ввести</button>
   </form>

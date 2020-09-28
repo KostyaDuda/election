@@ -56,17 +56,18 @@ div {
   </div>
   <div class="form-group">
   <label for="exampleFormControlSelect1">Партійність</label>
-    <select name="party_affiliation" id="party_affiliation" class="form-control" id="exampleFormControlSelect1">
+  <input type="text" name="party_affiliation" id="party_affiliation" class="form-control datetimepicker" required> 
+    <!-- <select name="party_affiliation" id="party_affiliation" class="form-control" id="exampleFormControlSelect1">
       <option value="Самовисуванець">Самовисуванець</option>
       @foreach($parties as $party)
                 <option value="{{ $party->name }}">{{ $party->name }}</option>
-            @endforeach
+            @endforeach -->
       <!-- <option value="ВО Свобода">ВО Свобода</option>
       <option value="Слуга Народу">Слуга Народу</option>
       <option value="Батьківщина">Батьківщина</option>
       <option value="Європейська Солідарність">Європейська Солідарність</option>
-      <option value="Голос">Голос</option> -->
-    </select>
+      <option value="Голос">Голос</option> 
+    </select>-->
   </div>
   <button type="submit" class="btn btn-primary btn-warning">Ввести</button>
   </form>
