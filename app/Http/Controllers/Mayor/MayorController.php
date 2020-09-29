@@ -66,7 +66,7 @@ class MayorController extends Controller
     public function edit(Mayor $mayor)
     {
         $parties=Party::all();
-        return view('Mayor/update',compact('mayor','parties'));
+        return view('Mayor/update',compact('mayor'));
     }
 
     /**
