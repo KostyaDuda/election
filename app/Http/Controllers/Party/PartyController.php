@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Party;
 
 use App\Party;
+use App\Partybystate;
+use App\State;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -13,7 +15,6 @@ class PartyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -43,7 +44,26 @@ class PartyController extends Controller
      */
     public function store(Request $request)
     {
-        Party::create($request->all());
+          $states=State::all();
+          Party::create($request->all());
+          $party = Party::where('name',$request->name)->first();
+          if($party->type == 'Місто')
+          {
+             foreach($states as $state)
+             {
+                 $pbs = new Partybystate;
+                 $pbs->party_id = $party->id;
+                 $pbs->state_id = $state->id;
+                 Partybystate::create($pbs->toArray()); 
+             }
+          }
+          else
+          {
+              $pbs = new Partybystate;
+              $pbs->party_id = $party->id;
+              $pbs->state_id = null;
+              Partybystate::create($pbs->toArray()); 
+          }
         return redirect()->route('parties.index');
     }
 
@@ -78,7 +98,33 @@ class PartyController extends Controller
      */
     public function update(Request $request, Party $party)
     {
+        $states=State::all();
         $party->update($request->all());
+        $party_new = Party::where('name',$request->name)->first();
+        $parties = Partybystate::where('party_id',$party_new->id)->get();
+        foreach($parties as $party_)
+        {
+            $party_->delete();    
+        }
+
+        if($request->type == 'Місто')
+          {
+             foreach($states as $state)
+             {
+                 $pbs = new Partybystate;
+                 $pbs->party_id = $party->id;
+                 $pbs->state_id = $state->id;
+                 Partybystate::create($pbs->toArray()); 
+             }
+          }
+          else
+          {
+              $pbs = new Partybystate;
+              $pbs->party_id = $party->id;
+              $pbs->state_id = null;
+              Partybystate::create($pbs->toArray()); 
+          }
+
         return redirect()->route('parties.index');
     }
 
@@ -90,6 +136,11 @@ class PartyController extends Controller
      */
     public function destroy(Party $party)
     {
+        $parties = Partybystate::where('party_id',$party->id)->get();
+        foreach($parties as $party_)
+        {
+            $party_->delete();    
+        }
         $party->delete();
         return redirect()->route('parties.index');
     }
