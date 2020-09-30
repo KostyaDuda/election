@@ -47,11 +47,15 @@ class PartyController extends Controller
           $states=State::all();
           Party::create($request->all());
           $party = Party::where('name',$request->name)->first();
-          if($party->type == 'Місто')
+          $types = ['Місто','Район','Область'];
+        foreach($types as $type)
+        {
+          if($type == 'Місто')
           {
              foreach($states as $state)
              {
                  $pbs = new Partybystate;
+                 $pbs->type = $type;
                  $pbs->party_id = $party->id;
                  $pbs->state_id = $state->id;
                  Partybystate::create($pbs->toArray()); 
@@ -60,10 +64,12 @@ class PartyController extends Controller
           else
           {
               $pbs = new Partybystate;
+              $pbs->type = $type;
               $pbs->party_id = $party->id;
               $pbs->state_id = null;
               Partybystate::create($pbs->toArray()); 
           }
+        }
         return redirect()->route('parties.index');
     }
 

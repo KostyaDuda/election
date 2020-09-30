@@ -4,7 +4,7 @@
 @section('content')
 
  <div class="container">
- <h1>{{$state->name}}<img width="100px" src="http://election/img/tent.png"><a href="{{route('districts.create_',$state)}}" class="btn btn-success">Додати Дільницю</a><a href="{{route('states.destroy_all',$state)}}" class="btn btn-danger">Видалити всі дільниці округу</a></h1>
+ <h1>{{$state->name}}<img width="100px" src="http://election/img/tent.png"><a href="{{route('districts.create_',$state)}}" class="btn btn-success">Додати Дільницю</a></h1>
       <table class="table">
         <thead class="thead-inverse">
        <tr>

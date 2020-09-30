@@ -12,4 +12,14 @@ class State extends Model
     {
         return $this->hasMany(District::class);
     }
+
+    public function candidats()
+    {
+        return $this->hasMany(Candidat::class);
+    }
+
+    public function getState_by_id($id)
+    {
+        return State::Where('id',$id);
+    }
 }

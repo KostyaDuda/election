@@ -15,6 +15,7 @@ class CreatePartybystateTable extends Migration
     {
         Schema::create('partybystate', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('type');
             $table->integer('party_id');
             $table->integer('state_id')->default(NULL);
             $table->integer('votes')->default(NULL);

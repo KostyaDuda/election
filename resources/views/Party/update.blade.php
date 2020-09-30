@@ -43,14 +43,6 @@ div {
     <label for="exampleInputEmail1">Назва Партії</label>
          <input type="text" name="name" id="name" class="form-control" id="exampleInputEmail1" value="{{$party->name}}" required autocomplete="name">
   </div>
-  <div class="form-group">
-    <label for="exampleInputEmail1">Тип Територіального Голосування</label>
-    <select name="type" id="type" class="form-control" id="exampleFormControlSelect1">
-      <option value="Область" {{ $party->type == 'Область' ? 'selected' : '' }}>Область</option>
-      <option value="Район" {{ $party->type == 'Район' ? 'selected' : '' }}>Район</option>
-      <option value="Місто" {{ $party->type == 'Місто' ? 'selected' : '' }}>Місто</option>
-    </select>
-  </div>
   <button type="submit" class="btn btn-primary btn-warning">Ввести</button>
   </form>
   </div>

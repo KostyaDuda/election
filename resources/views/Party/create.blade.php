@@ -42,14 +42,6 @@ div {
     <label for="exampleInputEmail1">Назва Партії</label>
          <input type="text" name="name" id="name" class="form-control" id="exampleInputEmail1" required autocomplete="name">
   </div>
-  <div class="form-group">
-    <label for="exampleInputEmail1">Тип Територіального Голосування</label>
-    <select name="type" id="type" class="form-control" id="exampleFormControlSelect1">
-      <option value="Область">Область</option>
-      <option value="Район">Район</option>
-      <option value="Місто">Місто</option>
-    </select>
-  </div>
   <button type="submit" class="btn btn-primary btn-warning">Ввести</button>
   </form>
   </div>
