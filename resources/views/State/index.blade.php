@@ -17,6 +17,7 @@
          <th></th>
          <th></th>
          <th></th>
+         <th></th>
 
        </tr>
         </thead>
@@ -25,6 +26,7 @@
         <tr>
            <th scope="row">{{$state->number}}</th>
                <td>{{$state->name}}</td>
+               <td><a href="{{route('repair')}}" class="btn btn-outline-primary">Кандидати</a></td>
                <td><a href="{{route('states.show', $state)}}" class="btn btn-outline-warning">Дільниці</a></td>
                <td><a href="{{route('states.edit', $state)}}" class="btn btn-outline-success">Редагувати</a></td>
                @if ($state->districts->count() > 0)
@@ -35,8 +37,7 @@
                <form action="{{route('states.destroy',$state)}}" method="POST">
                @csrf
                @method('DELETE')
-               <input type="submit" class="btn btn-outline-danger" value="Видалити">
-               
+               <input type="submit" class="btn btn-outline-danger" value="Видалити">         
                </form>
                </td>
                @endif

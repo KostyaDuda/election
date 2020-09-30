@@ -93,6 +93,13 @@ class DistrictController extends Controller
      */
     public function update(Request $request, District $district)
     {
+        $check = District::where('id',$request->id)->count();
+        if($check > 0 &&  $request->id != $district->id)
+        {
+            return back()->withErrors([
+                'message' => 'Така дільниця є в реєстрі'
+            ]);
+        }
         $district->update($request->all());
         return redirect()->route('districts.index');
     }
