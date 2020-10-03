@@ -27,7 +27,7 @@ class CandidatController extends Controller
 
     public function index()
     {
-        $candidats=Candidat::all();
+        $candidats=Candidat::paginate(10);
         return view('Candidat/index', compact('candidats'));
     }
 

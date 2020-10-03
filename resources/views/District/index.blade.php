@@ -38,6 +38,7 @@
         @endforeach
         </tbody>
       </table>
+      {{ $districts->links() }}
       </div>
 
 @endsection
