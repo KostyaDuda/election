@@ -44,7 +44,7 @@ class LoginController extends Controller
         if(! auth()->attempt(request(['name','password'])))
         {
             return back()->withErrors([
-                'message' => 'Wooops smt go wrong'
+                'message' => 'Такого користувача немає'
             ]);
         }
         return redirect()->route('home');

@@ -41,7 +41,7 @@ div {
   @csrf
   <div class="form-group">
     <label for="exampleInputEmail1">Порядковий номер в ТВК</label>
-         <input type="number" name="id" id="id" value="{{$candidat->id}}" class="form-control" id="exampleInputEmail1 " required autocomplete="id">
+         <input type="text" name="number" id="number" value="{{$candidat->id}}" class="form-control" id="exampleInputEmail1 " required autocomplete="id">
   </div>
   <div class="form-group">
     <label for="exampleInputEmail1">П.І.Б.</label>

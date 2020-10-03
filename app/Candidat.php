@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class Candidat extends Model
 {
     //
-    protected $fillable = ['id','name','date','party_id'];
+    protected $fillable = ['number','name','date','party_id'];
 
     // public function getParty()
     // {

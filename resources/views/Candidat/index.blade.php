@@ -4,7 +4,7 @@
 @section('content')
 
  <div class="container">
- <h1>Кандидати<img width="100px" src="img/political.png"><a href="{{route('candidats.create')}}" class="btn btn-warning">Додати Кандидата</a><a href="{{route('repair')}}" class="btn btn-primary">Завантажити Word</a></h1>
+ <h1>Кандидати<img width="100px" src="img/political.png"><a href="{{route('candidats.create')}}" class="btn btn-warning">Додати Кандидата</a><a href="{{route('candidats.upload')}}" class="btn btn-primary">Завантажити Word</a></h1>
       <table class="table">
         <thead class="thead-inverse">
        <tr>
@@ -20,7 +20,7 @@
         <tbody>
         @foreach($candidats as $candidat)
         <tr>
-           <th scope="row">{{$candidat->id}}</th>
+           <th scope="row">{{$candidat->number}}</th>
                <td>{{$candidat->name}}</td>
                <td>{{$candidat->date}}</td>
                <td>{{$candidat->getParty_by_id($candidat->party_id)->name}}</td>
