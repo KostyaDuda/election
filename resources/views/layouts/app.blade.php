@@ -49,27 +49,15 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('parties.index') }}">Партії</a>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    Кандидати <span class="caret"></span>
+                            <li class="nav-item">
+                                <a  class="nav-link" href="{{ route('candidats.index') }}">
+                                    Кандидати
                                 </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('candidats.index') }}"
-                                       >
-                                        {{ __('Список кандидатів') }}
-                                    </a>
-                                    <a class="dropdown-item" href="{{ route('candidats.candidat_','Область') }}"
-                                       >
-                                        {{ __('Область') }}
-                                    </a>
-                                    <a class="dropdown-item" href="{{ route('candidats.candidat_','Район') }}"
-                                       >
-                                        {{ __('Район') }}
-                                    </a>
-                                </div>
-
-                                
+                            </li>
+                            <li class="nav-item">
+                                <a  class="nav-link" href="{{ route('presents.index') }}">
+                                    Суб'єкти подання
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('repair') }}">Члени ДВК</a>

@@ -21,6 +21,7 @@ Route::resource('parties','Party\PartyController');
 Route::resource('states','State\StateController');
 Route::resource('districts','District\DistrictController');
 Route::resource('candidats','Candidat\CandidatController');
+Route::resource('presents','Present\PresentController');
 
 Route::get('/states/{state}/destroy_all', 'State\StateController@destroy_all')->name('states.destroy_all');
 Route::get('/states/{state}/candidats_', 'State\StateController@candidats_')->name('states.candidats');
