@@ -26,7 +26,7 @@
         <tr>
            <th scope="row">{{$state->number}}</th>
                <td>{{$state->name}}</td>
-               <td><a href="{{route('repair')}}" class="btn btn-outline-primary">Кандидати</a></td>
+               <td><a href="{{route('states.candidats', $state)}}" class="btn btn-outline-primary">Кандидати</a></td>
                <td><a href="{{route('states.show', $state)}}" class="btn btn-outline-warning">Дільниці</a></td>
                <td><a href="{{route('states.edit', $state)}}" class="btn btn-outline-success">Редагувати</a></td>
                @if ($state->districts->count() > 0)
@@ -65,6 +65,5 @@
     </div>
   </div>
 </div>
-
 @endsection
 

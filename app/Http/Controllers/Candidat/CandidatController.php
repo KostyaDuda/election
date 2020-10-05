@@ -31,6 +31,13 @@ class CandidatController extends Controller
         return view('Candidat/index', compact('candidats'));
     }
 
+    public function candidat_($type)
+    {
+        $parties=Partybystate::where('type',$type)->get();
+        return view('Candidat/candidat_',compact('parties','type'));
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *
@@ -42,10 +49,18 @@ class CandidatController extends Controller
         return view('Candidat/create', compact('partiesbystates'));
     }
 
+    
+
     public function upload()
     {
         $partiesbystates=Partybystate::all();
         return view('Candidat/upload', compact('staties','partiesbystates'));
+    }
+
+    public function search(Request $request)
+    {
+        $candidats = Candidat::where('name','like','%'.$request->name.'%')->get();
+        return view('Candidat/search', compact('candidats'));
     }
 
     public function read_file(Request $request)

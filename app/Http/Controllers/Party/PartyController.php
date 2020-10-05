@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Party;
 
 use App\Party;
+use App\Candidat;
 use App\Partybystate;
 use App\State;
 use Illuminate\Http\Request;
@@ -79,9 +80,10 @@ class PartyController extends Controller
      * @param  \App\Party  $party
      * @return \Illuminate\Http\Response
      */
-    public function show(Party $party)
+    public function show(Partybystate $party)
     {
-        //
+        $candidats = Candidat::where('party_id',$party->id)->get();
+        return view('Candidat/show',compact('candidats','party'));
     }
 
     /**
@@ -93,6 +95,12 @@ class PartyController extends Controller
     public function edit(Party $party)
     {
         return view('Party/update',compact('party'));
+    }
+
+    public function type(Party $party)
+    {
+        $partybystates = Partybystate::where('party_id',$party->id)->get();
+        return view('Party/type',compact('partybystates','party'));
     }
 
     /**

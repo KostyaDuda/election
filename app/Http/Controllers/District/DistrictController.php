@@ -23,7 +23,8 @@ class DistrictController extends Controller
     public function index()
     {
         $districts=District::paginate(10);
-        return view('District/index', compact('districts'));
+        $count=District::all()->count();
+        return view('District/index', compact('districts','count'));
     }
 
     /**
@@ -60,6 +61,13 @@ class DistrictController extends Controller
         District::create($request->all());
         return redirect()->route('districts.create');
     }
+
+    public function search(Request $request)
+    {
+        $districts = District::where('id',$request->id)->get();
+        return view('District/search', compact('districts'));
+    }
+
 
     /**
      * Display the specified resource.

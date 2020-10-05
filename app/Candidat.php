@@ -22,5 +22,6 @@ class Candidat extends Model
       $find = Partybystate::where('id',$candidat)->first();
       return Party::where('id',$find->party_id)->first();
     }
+    
 
 }

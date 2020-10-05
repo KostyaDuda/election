@@ -4,6 +4,8 @@ namespace App\Http\Controllers\State;
 
 use App\State;
 use App\District;
+use App\Partybystate;
+use App\Party;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -23,6 +25,13 @@ class StateController extends Controller
     {
         $states=State::all();
         return view('State/index',compact('states'));
+    }
+
+    public function candidats_(State $state)
+    {
+
+        $parties=Partybystate::where('state_id',$state->id)->get();
+        return view('State/candidats',compact('parties','state'));
     }
 
     /**
@@ -56,7 +65,8 @@ class StateController extends Controller
     public function show(State $state)
     {
         $districts = District::where('state_id',$state->id)->get();
-        return view('State/show', compact('state','districts'));
+        $count=District::where('state_id',$state->id)->count();
+        return view('State/show', compact('state','districts','count'));
     }
 
     /**
@@ -82,6 +92,7 @@ class StateController extends Controller
         $state->update($request->all());
         return redirect()->route('states.index');
     }
+
 
     /**
      * Remove the specified resource from storage.

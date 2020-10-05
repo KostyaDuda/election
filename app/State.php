@@ -22,4 +22,10 @@ class State extends Model
     {
         return State::Where('id',$id);
     }
+
+    public function getState_by_id_($id)
+    {
+        return State::Where('id',$id)->get();
+    }
+
 }

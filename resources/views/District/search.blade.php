@@ -4,7 +4,13 @@
 @section('content')
 
  <div class="container">
- <h1>{{$state->name}}<img width="100px" src="http://election/img/tent.png"><a href="{{route('districts.create_',$state)}}" class="btn btn-success">Додати Дільницю</a></h1>
+ <h1>Виборчі Дільниці<img width="100px" src="img/tent.png"><a href="{{route('districts.create')}}" class="btn btn-warning">Створити дільницю</a></h1>
+  <h3>Пошук</h3>
+  <form action="{{route('districts.search')}}" method="POST">
+               @csrf
+               <input type="number" name="id" id="id">
+               <input type="submit"  class="btn btn-outline-primary" value="Шукати">
+               </form>
       <table class="table">
         <thead class="thead-inverse">
        <tr>
@@ -13,7 +19,7 @@
          <th>Округ</th>
          <th>Адреса</th>
          <th></th>
-         <th>Кількість Дільниць: {{$count}}</th>
+         <th></th>
          <th></th>
 
        </tr>

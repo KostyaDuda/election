@@ -58,7 +58,6 @@ class LoginController extends Controller
         ]))
         return true;
     }
-
     public function username()
     {
            return 'name';

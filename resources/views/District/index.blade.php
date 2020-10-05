@@ -4,7 +4,19 @@
 @section('content')
 
  <div class="container">
+ <div class="row">
+ <div class="col-lg-7 col-md-7">
  <h1>Виборчі Дільниці<img width="100px" src="img/tent.png"><a href="{{route('districts.create')}}" class="btn btn-warning">Створити дільницю</a></h1>
+ </div>
+ <div class="col-lg-5 col-md-5"> 
+  <h3>Пошук</h3>
+  <form action="{{route('districts.search')}}" method="POST">
+               @csrf
+               <input type="number" name="id" id="id">
+               <input type="submit"  class="btn btn-outline-primary" value="Шукати">
+  </form>
+  </div>
+  </div>
       <table class="table">
         <thead class="thead-inverse">
        <tr>
@@ -12,7 +24,7 @@
          <th>Тип</th>
          <th>Округ</th>
          <th>Адреса</th>
-         <th></th>
+         <th>Кількість Дільниць: {{$count}}</th>
          <th></th>
          <th></th>
 

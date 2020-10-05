@@ -15,6 +15,11 @@ class Partybystate extends Model
       return Party::find($this->party_id);
     }
 
+    public function getCandidat_all($id)
+    {
+      return Candidat::where('party_id',$id)->get();
+    }
+
     public function getState()
     {
         return State::find($this->state_id);
