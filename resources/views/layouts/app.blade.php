@@ -60,7 +60,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('repair') }}">Члени ДВК</a>
+                                <a class="nav-link" href="{{ route('members.index') }}">Члени ДВК</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/repair">Голосування</a>

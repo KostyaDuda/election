@@ -25,7 +25,7 @@
                <td>{{$district->type}}</td>
                <td>{{$district->getState()->name}}</td>
                <td>{{$district->adress}}</td>
-               <td><a href="/repair" class="btn btn-outline-warning">Склад ДВК</a></td>
+               <td><a href="{{route('districts.show',$district)}}" class="btn btn-outline-warning">Склад ДВК</a></td>
                <td><a href="{{route('districts.edit',$district)}}" class="btn btn-outline-success">Редагувати</a></td>
                <td>
                <form action="{{route('districts.destroy',$district)}}" method="POST">

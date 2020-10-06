@@ -5,6 +5,7 @@ namespace App\Http\Controllers\District;
 
 use App\State;
 use App\District;
+use App\Member;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -77,7 +78,12 @@ class DistrictController extends Controller
      */
     public function show(District $district)
     {
-        //
+        //$members = Member::where('district_id',$district->id)->get();
+          $members_main = Member::where('district_id',$district->id)->where('priority',"Обов'язковий")->orderby('present_id')->get();
+          $count = Member::where('district_id',$district->id)->where('priority',"Обов'язковий")->orderby('present_id')->count();
+          $members_other = Member::where('district_id',$district->id)->where('priority',"Жеребкування")->orderby('name')->get();
+        //$count=District::where('state_id',$state->id)->count();
+        return view('District/show', compact('members_main','members_other','district','count'));
     }
 
     /**

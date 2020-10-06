@@ -22,6 +22,7 @@ Route::resource('states','State\StateController');
 Route::resource('districts','District\DistrictController');
 Route::resource('candidats','Candidat\CandidatController');
 Route::resource('presents','Present\PresentController');
+Route::resource('members','Member\MemberController');
 
 Route::get('/states/{state}/destroy_all', 'State\StateController@destroy_all')->name('states.destroy_all');
 Route::get('/states/{state}/candidats_', 'State\StateController@candidats_')->name('states.candidats');
@@ -37,6 +38,11 @@ Route::get('/candidats/{type}/candidat_', 'Candidat\CandidatController@candidat_
 
 Route::get('/parties/{party}/type', 'Party\PartyController@type')->name('parties.type');
 
+Route::get('/members//upload', 'Member\MemberController@upload')->name('members.upload');
+Route::post('/members/read_file', 'Member\MemberController@read_file')->name('members.read_file');
+Route::get('/members/erors', 'Member\MemberController@erors')->name('members.erors');
+Route::post('/members/search', 'Member\MemberController@search')->name('members.search');
+Route::get('/members/exportword', 'Member\MemberController@exportword')->name('members.exportword');
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/repair', 'HomeController@repair')->name('repair');
