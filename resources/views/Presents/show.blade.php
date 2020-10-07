@@ -6,7 +6,7 @@
  <div class="container">
  <div class="row">
  <div class="col-lg-7 col-md-7">
- <h1>Члени ДВК<img width="100px" src="/img/team.png"><a href="{{route('members.create')}}" class="btn btn-warning">Додати Члена ДВК</a><a href="{{route('members.upload')}}" class="btn btn-primary">Завантажити</a></h1>
+ <h1>Члени Суб'єкта подання "{{$present->name}}"<img width="100px" src="/img/team.png"><a href="{{route('members.create')}}" class="btn btn-warning">Додати Члена ДВК</a><a href="{{route('members.upload')}}" class="btn btn-primary">Завантажити</a></h1>
  </div>
  <div class="col-lg-3 col-md-2">
    <h3>Пошук</h3>
@@ -33,7 +33,7 @@
                             </li>
                             </ul>
   </div>
-      <table class="table">
+  <table class="table">
         <thead class="thead-inverse">
        <tr>
          <th>#</th>
@@ -44,7 +44,7 @@
          <th>Номер Телефону</th>
          <th>Партійність</th>
          <th>Пріоритетність</th>
-         <th></th>
+         <th>Кількість Поданих Людей {{$count}}</th>
          <th></th>
 
        </tr>
@@ -72,7 +72,6 @@
         @endforeach
         </tbody>
       </table>
-      {{ $members->links() }}
 </div>    
 </div>    
 

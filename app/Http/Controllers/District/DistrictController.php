@@ -81,6 +81,7 @@ class DistrictController extends Controller
         //$members = Member::where('district_id',$district->id)->get();
           $members_main = Member::where('district_id',$district->id)->where('priority',"Обов'язковий")->orderby('present_id')->get();
           $count = Member::where('district_id',$district->id)->where('priority',"Обов'язковий")->orderby('present_id')->count();
+          $count++;
           $members_other = Member::where('district_id',$district->id)->where('priority',"Жеребкування")->orderby('name')->get();
         //$count=District::where('state_id',$state->id)->count();
         return view('District/show', compact('members_main','members_other','district','count'));

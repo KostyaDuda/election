@@ -42,7 +42,10 @@ Route::get('/members//upload', 'Member\MemberController@upload')->name('members.
 Route::post('/members/read_file', 'Member\MemberController@read_file')->name('members.read_file');
 Route::get('/members/erors', 'Member\MemberController@erors')->name('members.erors');
 Route::post('/members/search', 'Member\MemberController@search')->name('members.search');
-Route::get('/members/exportword', 'Member\MemberController@exportword')->name('members.exportword');
+
+Route::get('/exportword/all', 'Export\ExportController@export_all')->name('export.export_all');
+Route::get('/exportword/{district}/one', 'Export\ExportController@export_one')->name('export.export_one');
+Route::get('/exportword/check', 'Export\ExportController@check_count')->name('export.check');
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/repair', 'HomeController@repair')->name('repair');

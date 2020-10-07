@@ -31,6 +31,7 @@
                <td>-</td>
                @endif
                <td>{{$present->name}}</td>
+               <td><a href="{{route('presents.show', $present)}}" class="btn btn-outline-warning">Раби</a></td>
                <td><a href="{{route('presents.edit', $present)}}" class="btn btn-outline-success">Редагувати</a></td>
                <td>
                <form action="{{route('presents.destroy',$present)}}" method="POST">

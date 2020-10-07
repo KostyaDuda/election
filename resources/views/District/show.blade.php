@@ -5,7 +5,7 @@
 
  <div class="container">
  <div class="row">
- <h1>Члени ДВК Дільниці №{{$district->id}}<img width="100px" src="/img/team.png"><a href="{{route('members.create')}}" class="btn btn-warning">Додати Члена ДВК</a><a href="#" class="btn btn-primary">Завантажити</a></h1>
+ <h1>Члени ДВК Дільниці №{{$district->id}}<img width="100px" src="/img/team.png"><a href="{{route('members.create')}}" class="btn btn-warning">Додати Члена ДВК</a><a href="{{route('export.export_one',$district)}}" class="btn btn-primary">Звіт Word</a></h1>
 
       <table class="table">
         <thead class="thead-inverse">

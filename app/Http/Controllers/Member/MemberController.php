@@ -17,6 +17,11 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index()
     {
         $members=Member::paginate(20);
@@ -231,15 +236,6 @@ class MemberController extends Controller
                             }
                          array_push($this->list_member, $member);
                          $this->check($member);
-                        
-                        //  $str = implode( "", $date );
-                        //  $str2 = explode( '.', $str);
-                        //  $candidat->number = $number;
-                        //  $candidat->name = implode( " ", $name );
-                        //  $candidat->date = $this->loop($str2);
-                        //  $candidat->party_id = $request->party_id;
-                        //  array_push($this->list_candidat, $candidat);
-                        //  $this->check($candidat);
                          $number = [];
                          $name = [];
                          $date = [];
@@ -356,67 +352,6 @@ class MemberController extends Controller
         }    
     }
 
-    public function exportword()
-    {
-
-        $phpWord = new PhpWord();
-
-        $districts=District::all();
-        dd($districts);
-       // $newSection = $wordTest->addSection();
- 
-       // $desc1 = "The Portfolio details is a very useful feature of the web page. You can establish your archived details and the works to the entire web community. It was outlined to bring in extra clients, get you selected based on this details.";
- 
-        //$newSection->addText($desc1, array('name' => 'Tahoma', 'size' => 15, 'color' => 'red'));
-        $section = $phpWord->addSection();
-        $fancyTableStyleName = 'Fancy Table';
-        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => 'd2d2d2', 'cellMargin' => 40, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER);
-        $fancyTableFirstRowStyle = array('bgColor' => 'DDDDDD');
-        $fancyTableCellStyle = array('valign' => 'center');
-
-        $text = "some text";
-        $PHPWord->addFontStyle('r2Style', array('bold'=>false, 'italic'=>false, 'size'=>12));
-    $PHPWord->addParagraphStyle('p2Style', array('align'=>'center', 'spaceAfter'=>100));
-$section->addText($text, 'r2Style', 'p2Style');
-
-        $fancyTableFontStyle = array('bold' => true);
-        // $phpWord->addTableStyle($fancyTableStyleName, $fancyTableStyle, $fancyTableFirstRowStyle);
-        // $table = $section->addTable($fancyTableStyleName);
-        // $table->addRow(900);
-        // $table->addCell(2000, $fancyTableCellStyle)->addText('ID', $fancyTableFontStyle);
-        // $table->addCell(2000, $fancyTableCellStyle)->addText('Name', $fancyTableFontStyle);
-        // $table->addCell(2000, $fancyTableCellStyle)->addText('Date', $fancyTableFontStyle);
-        $section = $phpWord->addSection();
-        foreach($districts as $district){
-            $section->addText("$district->name");
-         }
-        // foreach($str as $st){
-        //      $table->addRow();
-        //      $table->addCell(2000)->addText("{$st->id}");
-        //      $table->addCell(2000)->addText("{$st->name}");
-        //      $table->addCell(2000)->addText("{$st->date}");
-        //   }
-          $objectWriter = IOFactory::createWriter($phpWord, 'Word2007');
-            try {
-                    $objectWriter->save(storage_path('TestWordFile.docx'));
-                } catch (Exception $e) {
-            }
- 
-        return response()->download(storage_path('TestWordFile.docx'));   
-        // $head = ['id','name','date'];
-        // $word = new PhpWord;
-        // foreach($head as h);
-
-        // $word = new PhpWord;
-        // $str=Test::find(1);
-        // $TemplateProcessor = new TemplateProcessor('templates/word.docx');
-        // $TemplateProcessor->setValue('id',$str->id);
-        // $TemplateProcessor->setValue('name',$str->name);
-        // $TemplateProcessor->setValue('date',$str->date);
-        // $filename = $str->name;
-        // $TemplateProcessor->saveAs($filename.'.docx');
-        // return response()->download($filename.'.docx')->deleteFileAfterSend(true); 
-    }
 
 }
 

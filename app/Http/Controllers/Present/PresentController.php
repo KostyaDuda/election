@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Present;
 
 use App\Present;
+use App\Member;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -54,7 +55,9 @@ class PresentController extends Controller
      */
     public function show(Present $present)
     {
-        
+        $members = Member::where('present_id',$present->id)->get();
+        $count= Member::where('present_id',$present->id)->count();
+        return view('Presents/show', compact('present','members','count'));
     }
 
     /**
