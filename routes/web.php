@@ -46,6 +46,9 @@ Route::post('/members/search', 'Member\MemberController@search')->name('members.
 Route::get('/exportword/all', 'Export\ExportController@export_all')->name('export.export_all');
 Route::get('/exportword/{district}/one', 'Export\ExportController@export_one')->name('export.export_one');
 Route::get('/exportword/check', 'Export\ExportController@check_count')->name('export.check');
+Route::get('/exportword/dublicaties', 'Export\ExportController@dublicaties')->name('export.dublicaties');
+Route::get('/exportword/kvoty', 'Export\ExportController@kvoty')->name('export.kvoty');
+
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/repair', 'HomeController@repair')->name('repair');

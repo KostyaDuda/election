@@ -25,7 +25,8 @@ class MemberController extends Controller
     public function index()
     {
         $members=Member::paginate(20);
-        return view('Member/index', compact('members'));
+        $count=Member::all()->count();
+        return view('Member/index', compact('members','count'));
     }
 
     /**
@@ -145,7 +146,8 @@ class MemberController extends Controller
             $member->priority= "Жеребкування";
         }
         $member->update($request->all());
-        return redirect()->route('members.index');
+       // return redirect()->route('members.show');
+       return redirect()->back();
     }
 
     /**
@@ -169,6 +171,7 @@ class MemberController extends Controller
     public function search(Request $request)
     {
         $members = Member::where('name','like','%'.$request->name.'%')->get();
+        
         return view('Member/search', compact('members'));
     }
 

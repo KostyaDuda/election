@@ -29,6 +29,9 @@
                                     <a class="dropdown-item" href="{{ route('export.check') }}">
                                         {{ __('Перевірка Кількості людей на ДВК') }}
                                     </a>
+                                    <a class="dropdown-item" href="{{ route('export.kvoty') }}">
+                                        {{ __('Квоти') }}
+                                    </a>
                                 </div>
                             </li>
                             </ul>
@@ -44,7 +47,7 @@
          <th>Номер Телефону</th>
          <th>Партійність</th>
          <th>Пріоритетність</th>
-         <th></th>
+         <th>Кількість людей: {{$count}}</th>
          <th></th>
 
        </tr>

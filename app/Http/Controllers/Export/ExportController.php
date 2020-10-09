@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use PhpOffice\PhpWord\TemplateProcessor;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
+use Illuminate\Support\Facades\DB;
+
 
 class ExportController extends Controller
 {
@@ -124,6 +126,15 @@ class ExportController extends Controller
                 $table->addCell(2000)->addText("Перебор");
 
             }
+            if(!$this->check_less($district->type,$members_count))
+            {
+                $table->addRow();
+                $table->addCell(2000)->addText("{$district->id}");
+                $table->addCell(2000)->addText("{$district->type}");
+                $table->addCell(2000)->addText("{$members_count}");
+                $table->addCell(2000)->addText("Перебор");
+
+            }
         }
         $objectWriter = IOFactory::createWriter($phpWord, 'Word2007');
             try {
@@ -156,6 +167,91 @@ class ExportController extends Controller
             return true;
         }
     }
+    public function dublicaties()
+    {
+        $phpWord = new PhpWord();
+        $section = $phpWord->addSection();
+        $fancyTableStyleName = 'Fancy Table';
+        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => 'd2d2d2', 'cellMargin' => 40, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER);
+        $fancyTableFirstRowStyle = array('bgColor' => 'DDDDDD');
+        $fancyTableCellStyle = array('valign' => 'center');
+
+        $headerstyle = array('align' => 'center','size' => '48');
+
+        $fancyTableFontStyle = array('bold' => true);
+        $phpWord->addTableStyle($fancyTableStyleName, $fancyTableStyle, $fancyTableFirstRowStyle);
+   
+        $table = $section->addTable($fancyTableStyleName);
+        
+        $table->addRow(900);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('ДВК', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('ПІБ', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Посада', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('ДН', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Телефон', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Партійність', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Ж/О', $fancyTableFontStyle);
+
+    
+      $members = DB::table('mebers')->groupBy('name')->having(DB::raw('count(*)'), '>', 1);
+
+ 
+        foreach($member as $member){
+            $table->addRow();
+            $index = $key+1;
+            $table->addCell(2000)->addText("{$member->district_id}");
+            $table->addCell(2000)->addText("{$member->name}");
+            $table->addCell(2000)->addText("{$member->position}");
+            $table->addCell(2000)->addText("{$member->date}");
+            $table->addCell(2000)->addText("{$member->number}");
+            $table->addCell(2000)->addText("{$member->getPresent()->name}");
+            $table->addCell(2000)->addText("{$member->priority}");
+         }
+
+
+    }
+
+    public function kvoty()
+    {
+        $kvotis = DB::table('members')->select('presents.name', DB::raw('COUNT(presents.name) as count'))
+            ->join('presents', 'members.present_id', '=', 'presents.id')->groupBy('presents.name')->get();
+
+            $phpWord = new PhpWord();
+            $section = $phpWord->addSection();
+            $fancyTableStyleName = 'Fancy Table';
+            $fancyTableStyle = array('borderSize' => 2, 'borderColor' => '000000', 'cellMargin' => 40, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER);
+            $fancyTableFirstRowStyle = array('bgColor' => 'ffffff');
+            $fancyTableCellStyle = array('valign' => 'center');
+    
+            $headerstyle = array('align' => 'center','size' => '48');
+    
+            $fancyTableFontStyle = array('bold' => true);
+            $phpWord->addTableStyle($fancyTableStyleName, $fancyTableStyle, $fancyTableFirstRowStyle);
+       
+            $table = $section->addTable($fancyTableStyleName);
+            
+            $table->addRow(900);
+            $table->addCell(2000, $fancyTableCellStyle)->addText('Парітя', $fancyTableFontStyle);
+            $table->addCell(2000, $fancyTableCellStyle)->addText('Кількість Людей', $fancyTableFontStyle);
+    
+     
+            foreach($kvotis as $kvoty){
+                $table->addRow();
+                $table->addCell(2000)->addText("{$kvoty->name}");
+                $table->addCell(2000)->addText("{$kvoty->count}");
+             }
+
+             $objectWriter = IOFactory::createWriter($phpWord, 'Word2007');
+            try {
+                $name = time().'kvota.docx';
+                    $objectWriter->save(storage_path($name));
+                } catch (Exception $e) {
+            }
+ 
+        return response()->download(storage_path($name));
+        
+    }
+
     public function check_less($type,$count)
     {
         

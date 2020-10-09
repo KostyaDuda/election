@@ -66,7 +66,6 @@ class StateController extends Controller
     {
         $districts = District::where('state_id',$state->id)->get();
         $count=District::where('state_id',$state->id)->count();
-        dd($districts);
         return view('State/show', compact('state','districts','count'));
     }
 
