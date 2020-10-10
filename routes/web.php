@@ -44,10 +44,12 @@ Route::get('/members/erors', 'Member\MemberController@erors')->name('members.ero
 Route::post('/members/search', 'Member\MemberController@search')->name('members.search');
 
 Route::get('/exportword/all', 'Export\ExportController@export_all')->name('export.export_all');
+Route::get('/exportword/all_', 'Export\ExportController@export_all_')->name('export.export_all_');
 Route::get('/exportword/{district}/one', 'Export\ExportController@export_one')->name('export.export_one');
 Route::get('/exportword/check', 'Export\ExportController@check_count')->name('export.check');
 Route::get('/exportword/dublicaties', 'Export\ExportController@dublicaties')->name('export.dublicaties');
 Route::get('/exportword/kvoty', 'Export\ExportController@kvoty')->name('export.kvoty');
+Route::get('/exportword/mains', 'Export\ExportController@mains')->name('export.mains');
 
 
 Route::get('/home', 'HomeController@index')->name('home');

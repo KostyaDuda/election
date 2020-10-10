@@ -24,13 +24,19 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('export.export_all') }}">
-                                        {{ __('Вивеcти Членів ДВК по дільницям дляжеребкування') }}
+                                        {{ __('Вивеcти Членів ДВК по дільницям для жеребкування') }}
+                                    </a>
+                                    <a class="dropdown-item" href="{{ route('export.export_all_') }}">
+                                        {{ __('Вивеcти Членів ДВК по дільницям По посадам') }}
                                     </a>
                                     <a class="dropdown-item" href="{{ route('export.check') }}">
                                         {{ __('Перевірка Кількості людей на ДВК') }}
                                     </a>
                                     <a class="dropdown-item" href="{{ route('export.kvoty') }}">
                                         {{ __('Квоти') }}
+                                    </a>
+                                    <a class="dropdown-item" href="{{ route('export.mains') }}">
+                                        {{ __('Керівний склад ДВК') }}
                                     </a>
                                 </div>
                             </li>

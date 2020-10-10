@@ -23,19 +23,25 @@ class ExportController extends Controller
     {
         $phpWord = new PhpWord();
         $districts=District::all();
-        
-        $section = $phpWord->addSection();
+        $sectionStyle = array(
+            'marginTop' => 0,
+            'marginBottom' => 0,
+            'colsNum' => 1,
+            'space' => array('line' => 300)
+        );
+        foreach($districts as $district)
+        { 
+        $section = $phpWord->addSection($sectionStyle);
         $fancyTableStyleName = 'Fancy Table';
-        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => 'd2d2d2', 'cellMargin' => 40, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER);
-        $fancyTableFirstRowStyle = array('bgColor' => 'DDDDDD');
+        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => '000000', 'cellMargin' => 0, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER , 'layout' => \PhpOffice\PhpWord\Style\Table::LAYOUT_FIXED);
+        $fancyTableFirstRowStyle = array('bgColor' => 'ffffff');
         $fancyTableCellStyle = array('valign' => 'center');
 
-        $headerstyle = array('align' => 'center','size' => '48');
+        $headerstyle = array('align' => 'center','size' => '24');
 
         $fancyTableFontStyle = array('bold' => true);
         $phpWord->addTableStyle($fancyTableStyleName, $fancyTableStyle, $fancyTableFirstRowStyle);
-        foreach($districts as $district)
-        {    
+           
         $table = $section->addText($district->id, $headerstyle);
         $table = $section->addTable($fancyTableStyleName);
         
@@ -82,24 +88,141 @@ class ExportController extends Controller
         }
           $objectWriter = IOFactory::createWriter($phpWord, 'Word2007');
             try {
-                $name = time().'TestWordFile.docx';
+                $name = time().'jerebkuvania_cklad.docx';
                     $objectWriter->save(storage_path($name));
                 } catch (Exception $e) {
             }
  
         return response()->download(storage_path($name));   
     }
+    public function export_all_()
+    {
+        $phpWord = new PhpWord();
+        $districts=District::all();
+        $sectionStyle = array(
+            'marginTop' => 0,
+            'marginBottom' => 0,
+            'colsNum' => 1,
+            'space' => array('line' => 300)
+        );
+        foreach($districts as $district)
+        {  
+        $section = $phpWord->addSection($sectionStyle);
+        $fancyTableStyleName = 'Fancy Table';
+        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => '000000', 'cellMargin' => 0, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER , 'layout' => \PhpOffice\PhpWord\Style\Table::LAYOUT_FIXED);
+        $fancyTableFirstRowStyle = array('bgColor' => 'ffffff');
+        $fancyTableCellStyle = array('valign' => 'center');
 
+        $headerstyle = array('align' => 'center','size' => '24');
+
+
+        $fancyTableFontStyle = array('bold' => true);
+        $phpWord->addTableStyle($fancyTableStyleName, $fancyTableStyle, $fancyTableFirstRowStyle);
+          
+        $table = $section->addText($district->id, $headerstyle);
+        $table = $section->addTable($fancyTableStyleName);
+        
+        $table->addRow(900);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('№', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('ДВК', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('ПІБ', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Посада', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('ДН', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Телефон', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Партійність', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Ж/О', $fancyTableFontStyle);
+        
+        $members_main = Member::where('district_id',$district->id)->orderby('position')->get();
+
+        foreach($members_main as $key => $member){
+             $table->addRow();
+             $index = $key+1;
+             $table->addCell(2000)->addText("{$index}");
+             $table->addCell(2000)->addText("{$member->district_id}");
+             $table->addCell(2000)->addText("{$member->name}");
+             $table->addCell(2000)->addText("{$member->position}");
+             $table->addCell(2000)->addText("{$member->date}");
+             $table->addCell(2000)->addText("{$member->number}");
+             $table->addCell(2000)->addText("{$member->getPresent()->name}");
+             $table->addCell(2000)->addText("{$member->priority}");
+          }
+        }
+          $objectWriter = IOFactory::createWriter($phpWord, 'Word2007');
+            try {
+                $name = time().'kirovny_cklad.docx';
+                    $objectWriter->save(storage_path($name));
+                } catch (Exception $e) {
+            }
+ 
+        return response()->download(storage_path($name));  
+    }
+
+    public function mains()
+    {
+        $phpWord = new PhpWord();
+        $districts=District::all();
+
+
+        $section = $phpWord->addSection();
+        $fancyTableStyleName = 'Fancy Table';
+        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => '000000', 'cellMargin' => 0, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER , 'layout' => \PhpOffice\PhpWord\Style\Table::LAYOUT_FIXED);
+        $fancyTableFirstRowStyle = array('bgColor' => 'ffffff');
+        $fancyTableCellStyle = array('valign' => 'center');
+
+        $headerstyle = array('align' => 'center','size' => '24');
+
+
+        $fancyTableFontStyle = array('bold' => true);
+        $phpWord->addTableStyle($fancyTableStyleName, $fancyTableStyle, $fancyTableFirstRowStyle);
+        foreach($districts as $district)
+        {    
+        $table = $section->addText($district->id, $headerstyle);
+        $table = $section->addTable($fancyTableStyleName);
+        
+        $table->addRow(900);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('№', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('ДВК', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('ПІБ', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Посада', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('ДН', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Телефон', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Партійність', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Ж/О', $fancyTableFontStyle);
+        
+        $members_main = Member::where('district_id',$district->id)->where('position','!=',"Член")->where('position','!=',"Член ДВК")->orderby('position')->get();
+
+        foreach($members_main as $key => $member){
+             $table->addRow();
+             $index = $key+1;
+             $table->addCell(2000)->addText("{$index}");
+             $table->addCell(2000)->addText("{$member->district_id}");
+             $table->addCell(2000)->addText("{$member->name}");
+             $table->addCell(2000)->addText("{$member->position}");
+             $table->addCell(2000)->addText("{$member->date}");
+             $table->addCell(2000)->addText("{$member->number}");
+             $table->addCell(2000)->addText("{$member->getPresent()->name}");
+             $table->addCell(2000)->addText("{$member->priority}");
+          }
+        }
+          $objectWriter = IOFactory::createWriter($phpWord, 'Word2007');
+            try {
+                $name = time().'kirovny_cklad.docx';
+                    $objectWriter->save(storage_path($name));
+                } catch (Exception $e) {
+            }
+ 
+        return response()->download(storage_path($name));  
+    }
     public function check_count()
     {
         $phpWord = new PhpWord();
         $section = $phpWord->addSection();
         $fancyTableStyleName = 'Fancy Table';
-        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => 'd2d2d2', 'cellMargin' => 40, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER);
-        $fancyTableFirstRowStyle = array('bgColor' => 'DDDDDD');
+        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => '000000', 'cellMargin' => 40, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER , 'cellMargin'  => 80, 'layout' => \PhpOffice\PhpWord\Style\Table::LAYOUT_FIXED);
+        $fancyTableFirstRowStyle = array('bgColor' => 'ffffff');
         $fancyTableCellStyle = array('valign' => 'center');
 
-        $headerstyle = array('align' => 'center','size' => '48');
+        $headerstyle = array('align' => 'center','size' => '24');
 
         $fancyTableFontStyle = array('bold' => true);
         $phpWord->addTableStyle($fancyTableStyleName, $fancyTableStyle, $fancyTableFirstRowStyle);
@@ -132,13 +255,13 @@ class ExportController extends Controller
                 $table->addCell(2000)->addText("{$district->id}");
                 $table->addCell(2000)->addText("{$district->type}");
                 $table->addCell(2000)->addText("{$members_count}");
-                $table->addCell(2000)->addText("Перебор");
+                $table->addCell(2000)->addText("Недобор");
 
             }
         }
         $objectWriter = IOFactory::createWriter($phpWord, 'Word2007');
             try {
-                $name = time().'TestWordFile.docx';
+                $name = time().'perevirka_dilnyuts.docx';
                     $objectWriter->save(storage_path($name));
                 } catch (Exception $e) {
             }
@@ -172,8 +295,8 @@ class ExportController extends Controller
         $phpWord = new PhpWord();
         $section = $phpWord->addSection();
         $fancyTableStyleName = 'Fancy Table';
-        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => 'd2d2d2', 'cellMargin' => 40, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER);
-        $fancyTableFirstRowStyle = array('bgColor' => 'DDDDDD');
+        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => '000000', 'cellMargin' => 40, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER);
+        $fancyTableFirstRowStyle = array('bgColor' => 'ffffff');
         $fancyTableCellStyle = array('valign' => 'center');
 
         $headerstyle = array('align' => 'center','size' => '48');
