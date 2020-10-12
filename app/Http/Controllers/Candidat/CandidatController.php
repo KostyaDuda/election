@@ -165,7 +165,11 @@ class CandidatController extends Controller
     public function check_date($date)
     {
         $str = explode( '/', $date);
-        if($date == null)
+        if($date == null || $date == "" ||  $date == " ")
+        {
+            return false;
+        }
+        else if (count($str) < 3)
         {
             return false;
         }
@@ -183,7 +187,7 @@ class CandidatController extends Controller
     public function check_name($name)
     {
         $str = explode( ' ', $name);
-        if($name == "")
+        if($name == "" || $name == null )
         {
             return false;    
         }
@@ -198,25 +202,20 @@ class CandidatController extends Controller
 
     public function check_number($number)
     {
-        // $check = Candidat::where('id',$id)->count();
-        // if($check > 0)
-        // {
-        //    return false;
-        // }
-        // else
-        // {
-        //     return true;
-        // }
-        // if($number =" ")
-        // {
-        //     return false;
-        // }
-         return true;
+        if($number == "" || $number == null )
+        {
+           return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
 
     public function loop($str)
     {
+        dd($str);
         if($str[0] == "")
         {
             return null;

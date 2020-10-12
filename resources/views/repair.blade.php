@@ -1,6 +1,6 @@
 
 
-
+@section('title', 'Розділ В Розробці')
 <style>
 .flex-center {
     align-items: center;
@@ -18,6 +18,7 @@ h1{
     font-size:50px;
 }
 </style>
+<title>Розділ В Розробці</title>
   <div class="flex-center position-ref full-height">
   <h1>Даний розділ у процесі розробки</h1>
     <img height="200px" src="img/settings.png">

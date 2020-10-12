@@ -1,6 +1,6 @@
 
 @extends('layouts.app')
-
+@section('title', 'Завантажити Подання')
 @section('content')
 <style>
 input[type=text], select {

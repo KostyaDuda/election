@@ -1,6 +1,6 @@
 
 @extends('layouts.app')
-
+@section('title', 'Кандидати Округу')
 @section('content')
 <style>
 a h1

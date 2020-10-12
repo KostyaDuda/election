@@ -1,6 +1,6 @@
 
 @extends('layouts.app')
-
+@section('title', 'Субєкти Подання')
 @section('content')
 <style>
  a{

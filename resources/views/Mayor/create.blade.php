@@ -1,6 +1,6 @@
 
 @extends('layouts.app')
-
+@section('title', 'Додати Мера')
 @section('content')
 <style>
 input[type=text], select {

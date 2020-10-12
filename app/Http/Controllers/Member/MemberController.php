@@ -271,15 +271,19 @@ class MemberController extends Controller
     {
         if(!$this->check_date($member->date))
         {
-            array_push($this->error_array,'Невірний формат дати народження або пусте значення дати народження '.$member->number.' '.$member->name.' '.$member->date);
+            array_push($this->error_array,'Невірний формат дати народження або пусте значення дати народження '.$member->district_id.' '.$member->name.' '.$member->date.' '.$member->number);
         }
         if(!$this->check_name($member->name))
         {
-            array_push($this->error_array,'Невірно вказано імя прізвище по-батькові '.$member->number.' '.$member->name.' '.$member->date.' ');
+            array_push($this->error_array,'Невірно вказано імя прізвище по-батькові '.$member->district_id.' '.$member->date.' '.$member->number);
         }
         if(!$this->check_number($member->number))
         {
-            array_push($this->error_array,'Пусте значення Номера '.$member->number.' '.$member->name.' '.$member->date.' ');
+            array_push($this->error_array,'Пусте значення Номера '.$member->district_id.' '.$member->name.' '.$member->date.' '.$member->number);
+        }
+        if(!$this->check_distric($member->district_id))
+        {
+            array_push($this->error_array,'Дільницю на яку посилається людина не існує '.$member->district_id.' '.$member->number.' '.$member->name.' '.$member->date.' '.$member->number);
         }
         
         if(count($this->error_array) == 0)
@@ -316,11 +320,6 @@ class MemberController extends Controller
         {
             return false;    
         }
-        ///////////////////////////////////////////////////////
-        // else if(count($str) != 3)
-        // {
-        //    return false;
-        // }
         else {return true; }
         
     }
@@ -328,7 +327,18 @@ class MemberController extends Controller
     public function check_number($number)
     {
 
-        if($number ="")
+        if($number = "" || $number = null)
+        {    
+            return false;
+        }
+        else{return true;}
+         
+    }
+
+    public function check_distric($distric)
+    {
+        $check = District::where('id',$distric)->count();
+        if($check == 0)
         {
             return false;
         }
@@ -341,7 +351,11 @@ class MemberController extends Controller
 
     public function loop($str)
     {
-        if($str[0] == "")
+        if(count($str) <3 )
+        {
+            return null;
+        }
+        else if($str[0] == "")
         {
             return null;
         }

@@ -1,6 +1,6 @@
 
 @extends('layouts.app')
-
+@section('title', 'Партії')
 @section('content')
  <div class="container">
  <h1>Облік Партій<img width="100px" src="img/achievement.png"><a href="{{route('parties.create')}}" class="btn btn-warning">Додати Партію</a></h1>

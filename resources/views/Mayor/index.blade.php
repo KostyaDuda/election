@@ -1,6 +1,6 @@
 
 @extends('layouts.app')
-
+@section('title', 'Мери')
 @section('content')
  <div class="container">
  <h1>Кандидати у мери міста<img width="100px" src="img/mace.png"><a href="{{route('mayors.create')}}" class="btn btn-warning">Додати кандидата</a></h1>
