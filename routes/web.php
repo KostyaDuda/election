@@ -23,6 +23,7 @@ Route::resource('districts','District\DistrictController');
 Route::resource('candidats','Candidat\CandidatController');
 Route::resource('presents','Present\PresentController');
 Route::resource('members','Member\MemberController');
+Route::resource('personals','Personal\PersonalController');
 
 Route::get('/states/{state}/destroy_all', 'State\StateController@destroy_all')->name('states.destroy_all');
 Route::get('/states/{state}/candidats_', 'State\StateController@candidats_')->name('states.candidats');
@@ -50,6 +51,7 @@ Route::get('/exportword/check', 'Export\ExportController@check_count')->name('ex
 Route::get('/exportword/dublicaties', 'Export\ExportController@dublicaties')->name('export.dublicaties');
 Route::get('/exportword/kvoty', 'Export\ExportController@kvoty')->name('export.kvoty');
 Route::get('/exportword/mains', 'Export\ExportController@mains')->name('export.mains');
+Route::get('/exportword/{personal}/export_personals_', 'Export\ExportController@export_personals_')->name('export.export_personals_');
 
 
 Route::get('/home', 'HomeController@index')->name('home');

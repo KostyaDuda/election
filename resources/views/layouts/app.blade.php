@@ -39,6 +39,9 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         @if (Route::has('register'))
+                        <li class="nav-item">
+                                <a class="nav-link" href="{{ route('personals.index') }}">ТВК</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('states.index') }}">Округи</a>
                             </li>
