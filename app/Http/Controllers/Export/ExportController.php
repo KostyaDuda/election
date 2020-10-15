@@ -25,16 +25,29 @@ class ExportController extends Controller
         $phpWord = new PhpWord();
         $districts=District::all();
         $sectionStyle = array(
-            'marginTop' => 0,
+            'marginTop' => 500,
             'marginBottom' => 0,
-            'colsNum' => 1,
-            'space' => array('line' => 300)
+            'colsSpace' => 1,
+            'gutter' => 1,
+            'marginRight' => 500,
+            'marginLeft' => 500,
+            'space' => array('line' => 1000)
         );
+        $phpWord->setDefaultParagraphStyle(
+            array(
+                'align'      => 'both',
+                'spaceAfter' => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(12),
+                'spacing'    => 120,
+                'spaceAfter'=>0,
+                'lineHeight'=>1.0
+                )
+            );
+        //$phpWord->addParagraphStyle('P-listStyle', array('spaceAfter'=>0,'lineHeight'=>1.0));
         foreach($districts as $district)
         { 
         $section = $phpWord->addSection($sectionStyle);
         $fancyTableStyleName = 'Fancy Table';
-        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => '000000', 'cellMargin' => 0, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER , 'layout' => \PhpOffice\PhpWord\Style\Table::LAYOUT_FIXED);
+        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => '000000', 'cellMargin' => 0, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER , 'layout' => \PhpOffice\PhpWord\Style\Table::LAYOUT_FIXED,'spaceAfter'=>0,'lineHeight'=>1.0);
         $fancyTableFirstRowStyle = array('bgColor' => 'ffffff');
         $fancyTableCellStyle = array('valign' => 'center');
 
@@ -101,11 +114,23 @@ class ExportController extends Controller
         $phpWord = new PhpWord();
         $districts=District::all();
         $sectionStyle = array(
-            'marginTop' => 0,
+            'marginTop' => 500,
             'marginBottom' => 0,
-            'colsNum' => 1,
-            'space' => array('line' => 300)
+            'colsSpace' => 1,
+            'gutter' => 1,
+            'marginRight' => 500,
+            'marginLeft' => 500,
+            'space' => array('line' => 1000)
         );
+        $phpWord->setDefaultParagraphStyle(
+            array(
+                'align'      => 'both',
+                'spaceAfter' => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(12),
+                'spacing'    => 120,
+                'spaceAfter'=>0,
+                'lineHeight'=>1.0
+                )
+            );
         foreach($districts as $district)
         {  
         $section = $phpWord->addSection($sectionStyle);
@@ -400,16 +425,32 @@ class ExportController extends Controller
     {
         $phpWord = new PhpWord();
         $districts=District::all();
-        
-        $section = $phpWord->addSection();
+
+        $sectionStyle = array(
+            'marginTop' => 500,
+            'marginBottom' => 500,
+            'marginRight' => 500,
+            'marginLeft' => 500,
+        );
+        $textstyle = array('space' => array('line' => 100000));
+        $phpWord->setDefaultParagraphStyle(
+            array(
+                'align'      => 'both',
+                'spaceAfter' => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(12),
+                'spacing'    => 120,
+                'spaceAfter'=>0,
+                'lineHeight'=>1.0
+                )
+            );
+        $section = $phpWord->addSection($sectionStyle);
         $fancyTableStyleName = 'Fancy Table';
-        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => 'd2d2d2', 'cellMargin' => 40, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER);
+        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => '000000', 'cellMargin' => 0, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER);
         $fancyTableFirstRowStyle = array('bgColor' => 'DDDDDD');
-        $fancyTableCellStyle = array('valign' => 'center');
+        $fancyTableCellStyle = array('valign' => 'center','cellMarginTop' => 100, 'cellMarginRight' => 100, 'cellMarginBottom' => 100,'cellMarginLeft' => 100);
 
-        $headerstyle = array('align' => 'center','size' => '48');
+        $headerstyle = array('align' => 'center','size' => '24');
 
-        $fancyTableFontStyle = array('bold' => true);
+        $fancyTableFontStyle = array('bold' => true,'space' => array('line' => 0));
         $phpWord->addTableStyle($fancyTableStyleName, $fancyTableStyle, $fancyTableFirstRowStyle);
    
         $table = $section->addText($district->id, $headerstyle);
@@ -430,33 +471,33 @@ class ExportController extends Controller
         foreach($members_main as $key => $member){
              $table->addRow();
              $index = $key+1;
-             $table->addCell(2000)->addText("{$index}");
-             $table->addCell(2000)->addText("{$member->district_id}");
-             $table->addCell(2000)->addText("{$member->name}");
-             $table->addCell(2000)->addText("{$member->position}");
-             $table->addCell(2000)->addText("{$member->date}");
-             $table->addCell(2000)->addText("{$member->number}");
-             $table->addCell(2000)->addText("{$member->getPresent()->name}");
-             $table->addCell(2000)->addText("{$member->priority}");
+             $table->addCell(2000)->addText("{$index}",$textstyle);
+             $table->addCell(2000)->addText("{$member->district_id}",$textstyle);
+             $table->addCell(2000)->addText("{$member->name}",$textstyle);
+             $table->addCell(2000)->addText("{$member->position}",$textstyle);
+             $table->addCell(2000)->addText("{$member->date}",$textstyle);
+             $table->addCell(2000)->addText("{$member->number}",$textstyle);
+             $table->addCell(2000)->addText("{$member->getPresent()->name}",$textstyle);
+             $table->addCell(2000)->addText("{$member->priority}",$textstyle);
           }
           $index++;
           $members_other = Member::where('district_id',$district->id)->where('priority',"Жеребкування")->orderby('name')->get();
           $count = Member::where('district_id',$district->id)->where('priority',"Обов'язковий")->orderby('present_id')->count();
           foreach($members_other as $key => $member){
             $table->addRow();
-            $table->addCell(2000)->addText("{$index}");
-            $table->addCell(2000)->addText("{$member->district_id}");
-            $table->addCell(2000)->addText("{$member->name}");
-            $table->addCell(2000)->addText("{$member->position}");
-            $table->addCell(2000)->addText("{$member->date}");
-            $table->addCell(2000)->addText("{$member->number}");
-            $table->addCell(2000)->addText("{$member->getPresent()->name}");
-            $table->addCell(2000)->addText("{$member->priority}");
+            $table->addCell(2000)->addText("{$index}",$textstyle);
+            $table->addCell(2000)->addText("{$member->district_id}",$textstyle);
+            $table->addCell(2000)->addText("{$member->name}",$textstyle);
+            $table->addCell(2000)->addText("{$member->position}",$textstyle);
+            $table->addCell(2000)->addText("{$member->date}",$textstyle);
+            $table->addCell(2000)->addText("{$member->number}",$textstyle);
+            $table->addCell(2000)->addText("{$member->getPresent()->name}",$textstyle);
+            $table->addCell(2000)->addText("{$member->priority}",$textstyle);
             $index++;
          }
           $objectWriter = IOFactory::createWriter($phpWord, 'Word2007');
             try {
-                $name = time().'TestWordFile.docx';
+                $name = $district->id.'.docx';
                     $objectWriter->save(storage_path($name));
                 } catch (Exception $e) {
             }
@@ -469,10 +510,13 @@ class ExportController extends Controller
         $phpWord = new PhpWord();
         $districts = District::where('personal_id',$personal->id)->get();
         $sectionStyle = array(
-            'marginTop' => 0,
+            'marginTop' => 500,
             'marginBottom' => 0,
-            'colsNum' => 1,
-            'space' => array('line' => 300)
+            'colsSpace' => 1,
+            'gutter' => 1,
+            'marginRight' => 500,
+            'marginLeft' => 500,
+            'space' => array('line' => 1000)
         );
         foreach($districts as $district)
         {  
