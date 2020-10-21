@@ -17,6 +17,7 @@
          <th>Назва</th>
          <th></th>
          <th></th>
+         <th></th>
 
        </tr>
         </thead>
@@ -31,6 +32,7 @@
                <td>-</td>
                @endif
                <td>{{$present->name}}</td>
+               <td><a href="{{route('export.export_by_presents', $present)}}" class="btn btn-outline-primary">Друк</a></td>
                <td><a href="{{route('presents.show', $present)}}" class="btn btn-outline-warning">Раби</a></td>
                <td><a href="{{route('presents.edit', $present)}}" class="btn btn-outline-success">Редагувати</a></td>
                <td>

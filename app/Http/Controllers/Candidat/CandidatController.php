@@ -215,7 +215,6 @@ class CandidatController extends Controller
 
     public function loop($str)
     {
-        dd($str);
         if($str[0] == "")
         {
             return null;

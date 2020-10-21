@@ -38,6 +38,9 @@
                                     <a class="dropdown-item" href="{{ route('export.mains') }}">
                                         {{ __('Керівний склад ДВК') }}
                                     </a>
+                                    <a class="dropdown-item" href="{{ route('export.dublicaties') }}">
+                                        {{ __('Пошук Дублікатів') }}
+                                    </a>
                                 </div>
                             </li>
                             </ul>

@@ -24,6 +24,7 @@ Route::resource('candidats','Candidat\CandidatController');
 Route::resource('presents','Present\PresentController');
 Route::resource('members','Member\MemberController');
 Route::resource('personals','Personal\PersonalController');
+Route::resource('protocols','Protocol\ProtocolController');
 
 Route::get('/states/{state}/destroy_all', 'State\StateController@destroy_all')->name('states.destroy_all');
 Route::get('/states/{state}/candidats_', 'State\StateController@candidats_')->name('states.candidats');
@@ -47,6 +48,7 @@ Route::post('/members/search', 'Member\MemberController@search')->name('members.
 Route::get('/exportword/all', 'Export\ExportController@export_all')->name('export.export_all');
 Route::get('/exportword/all_', 'Export\ExportController@export_all_')->name('export.export_all_');
 Route::get('/exportword/{district}/one', 'Export\ExportController@export_one')->name('export.export_one');
+Route::get('/exportword/{present}/presents', 'Export\ExportController@export_by_presents')->name('export.export_by_presents');
 Route::get('/exportword/check', 'Export\ExportController@check_count')->name('export.check');
 Route::get('/exportword/dublicaties', 'Export\ExportController@dublicaties')->name('export.dublicaties');
 Route::get('/exportword/kvoty', 'Export\ExportController@kvoty')->name('export.kvoty');

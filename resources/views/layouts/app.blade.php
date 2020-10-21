@@ -68,7 +68,7 @@
                                 <a class="nav-link" href="{{ route('members.index') }}">Члени ДВК</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/repair">Голосування</a>
+                                <a class="nav-link" href="{{ route('protocols.index') }}">Голосування</a>
                             </li>
                          @endif
 
