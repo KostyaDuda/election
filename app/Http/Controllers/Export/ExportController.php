@@ -158,6 +158,7 @@ class ExportController extends Controller
         $table->addCell(2000, $fancyTableCellStyle)->addText('Телефон', $fancyTableFontStyle);
         $table->addCell(2000, $fancyTableCellStyle)->addText('Партійність', $fancyTableFontStyle);
         $table->addCell(2000, $fancyTableCellStyle)->addText('Ж/О', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Доданий', $fancyTableFontStyle);
         
         $members_main = Member::where('district_id',$district->id)->orderby('position')->get();
 
@@ -172,6 +173,7 @@ class ExportController extends Controller
              $table->addCell(2000)->addText("{$member->number}");
              $table->addCell(2000)->addText("{$member->getPresent()->name}");
              $table->addCell(2000)->addText("{$member->priority}");
+             $table->addCell(2000)->addText("{$member->created_at}");
           }
         }
           $objectWriter = IOFactory::createWriter($phpWord, 'Word2007');
@@ -215,6 +217,7 @@ class ExportController extends Controller
         $table->addCell(2000, $fancyTableCellStyle)->addText('Телефон', $fancyTableFontStyle);
         $table->addCell(2000, $fancyTableCellStyle)->addText('Партійність', $fancyTableFontStyle);
         $table->addCell(2000, $fancyTableCellStyle)->addText('Ж/О', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Доданий', $fancyTableFontStyle);
         
         $members_main = Member::where('district_id',$district->id)->where('position','!=',"Член")->where('position','!=',"Член ДВК")->orderby('position')->get();
 
@@ -229,6 +232,7 @@ class ExportController extends Controller
              $table->addCell(2000)->addText("{$member->number}");
              $table->addCell(2000)->addText("{$member->getPresent()->name}");
              $table->addCell(2000)->addText("{$member->priority}");
+             $table->addCell(2000)->addText("{$member->created_at}");
           }
         }
           $objectWriter = IOFactory::createWriter($phpWord, 'Word2007');
@@ -321,7 +325,19 @@ class ExportController extends Controller
     {
 
         //$dublicates = Member::groupBy('name')->havingRaw('count(*)', '>', 1)->get();
+        $array_list = [];
+        $array_search =[];
         $dublicates = DB::table('members')->select('name', DB::raw('count(*) as c'))->groupBy('name')->havingRaw('Count(c) > ?', [1])->get();
+
+        foreach($dublicates as $dublicat)
+        {
+            array_push($array_list,$dublicat->name);
+        }
+
+        foreach($array_list as $list)
+        {   
+            array_push($array_search, Member::where('name',$list)->get());
+        }
 
         $phpWord = new PhpWord();
         $section = $phpWord->addSection();
@@ -340,28 +356,39 @@ class ExportController extends Controller
         $table->addRow(900);
         $table->addCell(2000, $fancyTableCellStyle)->addText('ДВК', $fancyTableFontStyle);
         $table->addCell(2000, $fancyTableCellStyle)->addText('ПІБ', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Посада', $fancyTableFontStyle);
         $table->addCell(2000, $fancyTableCellStyle)->addText('ДН', $fancyTableFontStyle);
         $table->addCell(2000, $fancyTableCellStyle)->addText('Телефон', $fancyTableFontStyle);
         $table->addCell(2000, $fancyTableCellStyle)->addText('Партійність', $fancyTableFontStyle);
         $table->addCell(2000, $fancyTableCellStyle)->addText('Ж/О', $fancyTableFontStyle);
-
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Доданий', $fancyTableFontStyle);
     
       //$members = DB::table('mebers')->groupBy('name')->having(DB::raw('count(*)'), '>', 1);
  
  
-        foreach($dublicates as $dublicat){
+        foreach($array_search as $list){
+            foreach($list as $l)
+            {       
             $table->addRow();
-            $index = $key+1;
-            $table->addCell(2000)->addText("{$dublicat->district_id}");
-            $table->addCell(2000)->addText("{$dublicat->name}");
-            $table->addCell(2000)->addText("{$dublicat->position}");
-            $table->addCell(2000)->addText("{$dublicat->date}");
-            $table->addCell(2000)->addText("{$dublicat->number}");
-            $table->addCell(2000)->addText("{$dublicat->getPresent()->name}");
-            $table->addCell(2000)->addText("{$dublicat->priority}");
+            $table->addCell(2000)->addText("{$l->district_id}");
+            $table->addCell(2000)->addText("{$l->name}");
+            $table->addCell(2000)->addText("{$l->position}");
+            $table->addCell(2000)->addText("{$l->date}");
+            $table->addCell(2000)->addText("{$l->number}");
+            $table->addCell(2000)->addText("{$l->getPresent()->name}");
+            $table->addCell(2000)->addText("{$l->priority}");
+            $table->addCell(2000)->addText("{$l->created_at}");
+        }
          }
 
+         $objectWriter = IOFactory::createWriter($phpWord, 'Word2007');
+         try {
+             $name = time().'dublicatu.docx';
+                 $objectWriter->save(storage_path($name));
+             } catch (Exception $e) {
+         }
 
+     return response()->download(storage_path($name));
     }
 
     public function kvoty()
@@ -469,6 +496,7 @@ class ExportController extends Controller
         $table->addCell(2000, $fancyTableCellStyle)->addText('Телефон', $fancyTableFontStyle);
         $table->addCell(2000, $fancyTableCellStyle)->addText('Партійність', $fancyTableFontStyle);
         $table->addCell(2000, $fancyTableCellStyle)->addText('Ж/О', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Доданий', $fancyTableFontStyle);
         $index =0;
         $members_main = Member::where('district_id',$district->id)->where('priority',"Обов'язковий")->orderby('present_id')->get();
 
@@ -483,6 +511,7 @@ class ExportController extends Controller
              $table->addCell(2000)->addText("{$member->number}",$textstyle);
              $table->addCell(2000)->addText("{$member->getPresent()->name}",$textstyle);
              $table->addCell(2000)->addText("{$member->priority}",$textstyle);
+             $table->addCell(2000)->addText("{$member->created_at}");
           }
           $index++;
           $members_other = Member::where('district_id',$district->id)->where('priority',"Жеребкування")->orderby('name')->get();
@@ -512,10 +541,22 @@ class ExportController extends Controller
     public function export_by_presents(Present $present)
     {
         $phpWord = new PhpWord();
+        $members;
         $districts=District::all();
+        if($present->name == "Слуга Народу" 
+        || $present->name == "Батьківщина" 
+        || $present->name == "ОПОЗИЦІЙНА ПЛАТФОРМА – ЗА ЖИТТЯ"
+        || $present->name == "Європейська Солідарність" 
+        || $present->name == "За Майбутнє")
+        {
+            $array_id = Present::where('name',$present->name)->get();
+            $members = Member::whereBetween('present_id',[$array_id[0]->id,$array_id[1]->id])->get();
 
+        }
+        else
+        {
         $members = Member::where('present_id',$present->id)->get();
-
+        }
         $section = $phpWord->addSection();
         $fancyTableStyleName = 'Fancy Table';
         $fancyTableStyle = array('borderSize' => 1, 'borderColor' => '000000', 'cellMargin' => 0, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER , 'layout' => \PhpOffice\PhpWord\Style\Table::LAYOUT_FIXED);
@@ -540,6 +581,7 @@ class ExportController extends Controller
         $table->addCell(2000, $fancyTableCellStyle)->addText('Телефон', $fancyTableFontStyle);
         $table->addCell(2000, $fancyTableCellStyle)->addText('Партійність', $fancyTableFontStyle);
         $table->addCell(2000, $fancyTableCellStyle)->addText('Ж/О', $fancyTableFontStyle);
+        $table->addCell(2000, $fancyTableCellStyle)->addText('Доданий', $fancyTableFontStyle);
         
       
 
@@ -554,6 +596,7 @@ class ExportController extends Controller
              $table->addCell(2000)->addText("{$member->number}");
              $table->addCell(2000)->addText("{$member->getPresent()->name}");
              $table->addCell(2000)->addText("{$member->priority}");
+             $table->addCell(2000)->addText("{$member->created_at}");
           }
         
           $objectWriter = IOFactory::createWriter($phpWord, 'Word2007');
