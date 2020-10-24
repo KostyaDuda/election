@@ -39,14 +39,15 @@ div {
   <form method="POST" enctype="multipart/form-data" action="{{route('protocols.update',$protocol)}}">
   @method('PUT')
   @csrf
-  <div class="form-group">
-                                    
+  <div class="form-group">          
+                                    @foreach ($errors->all() as $error)                                            
                                         <div class="ui-widget">
 	                                         <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
 		                                          <p><span class="ui-icon ui-icon-alert" style="float: left; margin-bottom: 3.em;"></span>
 		                                                <strong>Alert:</strong></p>
 	                                          </div>
                                          </div>
+                                         @endforeach
                                   
 
     <label for="exampleInputEmail1">Дільниця</label>
@@ -55,10 +56,7 @@ div {
   <div class="form-group">
     <label for="exampleInputEmail1">Виборчий Тип</label>
     <select name="type" id="type" class="form-control" id="exampleFormControlSelect1">
-      <option value="Область" {{ $protocol->type == 'Область' ? 'selected' : '' }}>Область</option>
-      <option value="Район" {{ $protocol->type == 'Район' ? 'selected' : '' }}>Район</option>
-      <option value="Місто" {{ $protocol->type == 'Місто' ? 'selected' : '' }}>Місто</option>
-      <option value="Мер" {{ $protocol->type == 'Мер' ? 'selected' : '' }}>Мер</option>
+      <option value="{{$protocol->type}}">{{$protocol->type}}</option>
     </select>
   </div>
   <div class="form-group">
@@ -147,12 +145,12 @@ div {
        </tr>
         </thead>
         <tbody>
-        @foreach($parties_ as $party)
+        @foreach($p12 as $key => $p)
         <tr>
-           <th scope="row">{{$party->getParty()->id}}</th>
-               <td>{{$party->getParty()->name}}</td>
+           <th scope="row">{{$p->getParty_by_protocol()->id}}</th>
+               <td>{{$p->getParty_by_protocol()->name}}</td>
                </td>
-               <td><input class="form-control" type="number"></td>
+               <td><input class="form-control" name="p12_{{$key}}" value="{{$p->count_voises}}" type="number"></td>
             </tr>
 
         @endforeach
@@ -176,22 +174,23 @@ div {
        </tr>
         </thead>
         <tbody>
-        @foreach($parties_ as $party)
+        @foreach($p12 as $key => $p)
         <tr>
-           <th scope="row">{{$party->getParty()->id}}</th>
-               <td>{{$party->getParty()->name}}</td>
+           <th scope="row">{{$p->getParty_by_protocol()->id}}</th>
+               <td>{{$p->getParty_by_protocol()->name}}</td>
                </td>
-               <td><input class="form-control" type="number"></td>
+               <td><input class="form-control" name="p13_{{$key}}" value="{{$p->p13}}" type="number"></td>
             </tr>
 
         @endforeach
         </tbody>
       </table>
       </div>
-      <h3>14.</h3>
-   @foreach($parties_ as $party)
+
+        <h3>14.</h3>
+    @foreach($p12 as $key => $p)
     <div class="state jumbotron" >
-         <h1 class="display-4">{{$party->getParty()->name}}</h1>
+         <h1 class="display-4">{{$p->getParty_by_protocol()->name}}</h1>
          
            <div class="form-group">
               <table class="table">
@@ -203,21 +202,23 @@ div {
                      </tr>
                   </thead>
                 <tbody>
-                    @foreach($party->getCandidat_all($party->id) as $candidat)
+                    @foreach($p14 as $key => $candidat)
+                    @if($candidat->party_id == $p->party_id)
                       <tr>
-                      <th scope="row">{{$loop->index +1}}</th>
-                      <td>{{$candidat->name}}</td>
+                      <th scope="row">{{$candidat->getCandidat()->number}}</th>
+                      <td>{{$candidat->getCandidat()->name}}</td>
                       <td>
-                          <input  class="form-control"type="number">
+                          <input  class="form-control" name="p14_{{$key}}" value="{{$candidat->count_voises}}" type="number">
                        </td>
                       </tr>
+                      @endif
                     @endforeach
                 </tbody>
               </table>
            </div>
         </div>
     @endforeach
-
+     
     @else
     <div class="form-group">
   <h3>12.</h3>
@@ -236,14 +237,14 @@ div {
        </tr>
         </thead>
         <tbody>
-        @foreach($parties_ as $party)
+        @foreach($mayors as $key => $mayor)
         <tr>
-           <th scope="row">{{$party->id}}</th>
-               <td>{{$party->second_name}}</td>
-               <td>{{$party->first_name}}</td>
-               <td>{{$party->father_name}}</td>
+           <th scope="row">{{$mayor->id}}</th>
+               <td>{{$mayor->getMayor()->second_name}}</td>
+               <td>{{$mayor->getMayor()->first_name}}</td>
+               <td>{{$mayor->getMayor()->father_name}}</td>
                </td>
-               <td><input class="form-control" type="number"></td>
+               <td><input class="form-control" name="p15_{{$key}}" value="{{$mayor->count_voises}}" type="number"></td>
             </tr>
 
         @endforeach

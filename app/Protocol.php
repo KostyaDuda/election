@@ -1,6 +1,8 @@
 <?php
 
 namespace App;
+use App\Party;
+use App\Partybystate;
 
 use Illuminate\Database\Eloquent\Model;
 

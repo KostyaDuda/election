@@ -9,12 +9,14 @@
 </style>
  <div class="container">
  <div class="row">
-<div>
- <h1>Протоколи ДВК<img width="100px" src="/img/protocol.png">
- <h2>Кількість зроблених {{$count}}/548</h2></h1>
-
+    <div class="col-lg-5 col-md-5"> 
+        <h1>Протоколи ДВК<img width="100px" src="/img/protocol.png">
+    </div>
+    <div class="col-lg-5 col-md-5"> 
+        <h2>Кількість зроблених {{$count}}/{{4*$count_dis}}</h2></h1>
+    </div>  
  <div class="col-lg-3 col-md-3">   
-    <h3>Місто<a href="{{route('protocols.create')}}" class="btn btn-success">+</a></h3> 
+    <h3>Місто<a href="{{route('protocols.create')}}" class="btn btn-success">+</a><h5 style="color:blue;">{{$count_city}}/{{$count_dis}}</h5></h3> 
       <table class="table">
         <thead class="thead-inverse">
        <tr>
@@ -44,7 +46,7 @@
       </div>
 
       <div class="col-lg-3 col-md-3">   
-    <h3>Район<a href="{{route('protocols.create')}}" class="btn btn-success">+</a></h3> 
+    <h3>Район<a href="{{route('protocols.create')}}" class="btn btn-success">+</a><h5 style="color:blue;">{{$count_rayon_}}/{{$count_dis}}</h5></h3> 
       <table class="table">
         <thead class="thead-inverse">
        <tr>
@@ -74,7 +76,7 @@
       </div>
 
       <div class="col-lg-3 col-md-3">   
-    <h3>Область<a href="{{route('protocols.create')}}" class="btn btn-success">+</a></h3> 
+    <h3>Область<a href="{{route('protocols.create')}}" class="btn btn-success">+</a><h5 style="color:blue;">{{$count_oblast_}}/{{$count_dis}}</h5></h3> 
       <table class="table">
         <thead class="thead-inverse">
        <tr>
@@ -103,7 +105,7 @@
       </div>
 
       <div class="col-lg-3 col-md-3">   
-    <h3>Мери<a href="{{route('protocols.create')}}" class="btn btn-success">+</a></h3> 
+    <h3>Мери<a href="{{route('protocols.create')}}" class="btn btn-success">+</a><h5 style="color:blue;">{{$count_mayor_}}/{{$count_dis}}</h5></h3> 
       <table class="table">
         <thead class="thead-inverse">
        <tr>

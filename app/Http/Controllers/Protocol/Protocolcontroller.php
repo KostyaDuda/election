@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Protocol;
 use App\Protocol;
 use App\Party;
 use App\Mayor;
+use App\pmayor;
 use App\State;
 use App\Partybystate;
 use App\District;
+use App\Candidat;
+use App\p12;
+use App\p14;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -25,17 +29,18 @@ class Protocolcontroller extends Controller
     public function index()
     {
         $count = Protocol::where('status',1)->count();
+        $count_dis = District::all()->count();
 
-        $protocols_city=Protocol::where('type','Місто')->get();
+        $protocols_city=Protocol::where('type','Місто')->orderby('district_id')->get();
         $count_city=Protocol::where('type','Місто')->count();
 
-        $protocols_rayon_=Protocol::where('type','Район')->get();
+        $protocols_rayon_=Protocol::where('type','Район')->orderby('district_id')->get();
         $count_rayon_=Protocol::where('type','Район')->count();
 
-        $protocols_oblast_=Protocol::where('type','Область')->get();
+        $protocols_oblast_=Protocol::where('type','Область')->orderby('district_id')->get();
         $count_oblast_=Protocol::where('type','Область')->count();
 
-        $protocols_mayor_=Protocol::where('type','Мер')->get();
+        $protocols_mayor_=Protocol::where('type','Мер')->orderby('district_id')->get();
         $count_mayor_=Protocol::where('type','Мер')->count();
 
         return view('Protocol/index',compact(
@@ -47,7 +52,8 @@ class Protocolcontroller extends Controller
             'count_city',
             'count_rayon_',
             'count_oblast_',
-            'count_mayor_'
+            'count_mayor_',
+            'count_dis'
     ));
     }
 
@@ -88,6 +94,82 @@ class Protocolcontroller extends Controller
         {
             Protocol::create($request->all());
             $protocol = Protocol::where('district_id',$request->district_id)->where('type',$request->type)->first();
+            if($protocol->type == "Місто")
+            {
+                $district_ = $protocol->getDstrict();
+                $state = State::Where('id',$district_->state_id)->first();
+                $parties_ = Partybystate::where('state_id',$state->id)->where('type',$protocol->type)->get();
+                foreach($parties_ as $party)
+                {
+                    $p12 = new p12;
+                    $p12->protocol_id = $protocol->id;
+                    $p12->party_id = $party->id;
+                    $p12->state_id = $state->id;
+                    p12::create($p12->toArray());
+                    foreach($party->getCandidat_all($party->id) as $candidat)
+                    {
+                        $p14 = new p14;
+                        $p14->protocol_id = $protocol->id;
+                        $p14->party_id = $candidat->party_id;
+                        $p14->candidat_id = $candidat->id;
+                        $p14->state_id =  $state->id;
+                        p14::create($p14->toArray());
+                    }
+                }
+            }
+            else if($protocol->type == "Область")
+            {
+                $district_ = $protocol->getDstrict();
+                $parties_ = Partybystate::where('type',$protocol->type)->get();
+                foreach($parties_ as $party)
+                {
+                    $p12 = new p12;
+                    $p12->protocol_id = $protocol->id;
+                    $p12->party_id = $party->id;
+                    p12::create($p12->toArray());
+                    foreach($party->getCandidat_all($party->id) as $candidat)
+                    {
+                        $p14 = new p14;
+                        $p14->protocol_id = $protocol->id;
+                        $p14->party_id = $candidat->party_id;
+                        $p14->candidat_id = $candidat->id;
+                        p14::create($p14->toArray());
+                    }
+                }
+            }
+            else if($protocol->type == "Район")
+            {
+                $district_ = $protocol->getDstrict();
+                $parties_ = Partybystate::where('type',$protocol->type)->get();
+                foreach($parties_ as $party)
+                {
+                    $p12 = new p12;
+                    $p12->protocol_id = $protocol->id;
+                    $p12->party_id = $party->id;
+                    p12::create($p12->toArray());
+                    foreach($party->getCandidat_all($party->id) as $candidat)
+                    {
+                        $p14 = new p14;
+                        $p14->protocol_id = $protocol->id;
+                        $p14->party_id = $candidat->party_id;
+                        $p14->candidat_id = $candidat->id;
+                        p14::create($p14->toArray());
+                    }
+                }
+            }
+            else if($protocol->type == "Мер")
+            {
+                $district_ = $protocol->getDstrict();
+                $state = State::Where('id',$district_->state_id)->first();
+                $mayors = Mayor::all();
+                foreach($mayors as $mayor)
+                {
+                    $pmayor = new pmayor;
+                    $pmayor->protocol_id = $protocol->id;
+                    $pmayor->mayor_id = $mayor->id;
+                    pmayor::create($pmayor->toArray());
+                }
+            }
             return redirect()->route('protocols.edit',$protocol);
         }
 
@@ -113,35 +195,10 @@ class Protocolcontroller extends Controller
      */
     public function edit(Protocol $protocol)
     {
-        $district_;
-        $state;
-        $parties_;
-        if($protocol->type == "Місто")
-        {
-            $district_ = $protocol->getDstrict();
-            $state = State::Where('id',$district_->state_id)->first();
-            $parties_ = Partybystate::where('state_id',$state->id)->where('type',$protocol->type)->get();
-        }
-        else if($protocol->type == "Область")
-        {
-            $district_ = $protocol->getDstrict();
-            $state = State::Where('id',$district_->state_id)->first();
-            $parties_ = Partybystate::where('type',$protocol->type)->get();
-        }
-        else if($protocol->type == "Район")
-        {
-            $district_ = $protocol->getDstrict();
-            $state = State::Where('id',$district_->state_id)->first();
-            $parties_ = Partybystate::where('type',$protocol->type)->get();
-        }
-        else if($protocol->type == "Мер")
-        {
-            $district_ = $protocol->getDstrict();
-            $state = State::Where('id',$district_->state_id)->first();
-            $parties_ = Mayor::all();
-        }
-        
-        return view('Protocol/show', compact('protocol','parties','parties_'));
+        $p12 = p12::where('protocol_id',$protocol->id)->get();  
+        $p14 = p14::where('protocol_id',$protocol->id)->get();  
+        $mayors = pmayor::where('protocol_id',$protocol->id)->get();  
+        return view('Protocol/show', compact('protocol','p12','p14','mayors'));
     }
 
     /**
@@ -162,6 +219,87 @@ class Protocolcontroller extends Controller
         }
         else
         {
+            if($protocol->type == "Мер")
+            {
+                $pmayor = pmayor::where('protocol_id',$protocol->id)->get();
+                $pmayor_count = pmayor::where('protocol_id',$protocol->id)->count();
+
+                $array_req = $request->all();
+
+                $index = 0;
+                $start = 15;
+                $end = $start + $pmayor_count;
+
+                $index_mayor_ = 0;
+                foreach($array_req as $key => $req)
+                {
+                    if($index >= 15 && $index < $end)
+                    {
+                        $pmayor[$index_mayor_]->count_voises = $req;
+                        $pmayor[$index_mayor_]->save();
+                        $index_mayor_++;
+                    }
+                    $index++;
+                }
+
+            }
+            else
+            {
+            $p12 = p12::where('protocol_id',$protocol->id)->get();
+            $p14 = p14::where('protocol_id',$protocol->id)->get();
+            $p12count = p12::where('protocol_id',$protocol->id)->count();
+            $p14count = p14::where('protocol_id',$protocol->id)->count();
+
+            $array_req = $request->all();
+
+            $index = 0;
+            $start = 15;
+            $end = $start + $p12count;
+
+            $index_p12_ = 0;
+            foreach($array_req as $key => $req)
+            {
+                    if($index >= 15 && $index < $end)
+                    {
+                        $p12[$index_p12_]->count_voises = $req;
+                    $p12[$index_p12_]->save();
+                    $index_p12_++;
+                    }
+                    $index++;
+            }
+
+            $index = 0;
+            $start = 15 + $p12count;
+            $end = $start + $p12count;
+            $index_p12_ = 0;
+            foreach($array_req as $key => $req)
+            {
+                    if($index >= $start && $index < $end)
+                    {
+                        $p12[$index_p12_]->p13 = $req;
+                    $p12[$index_p12_]->save();
+                    $index_p12_++;
+                    }
+                    $index++;
+            }
+
+            $index = 0;
+            $start = 15 + $p12count *2;
+            
+            $end = $start + $p14count;
+            $index_p14_ = 0;
+            foreach($array_req as $key => $req)
+            {
+                 if($index >= $start && $index < $end)
+                 {
+                     $p14[$index_p14_]->count_voises = $req;
+                     $p14[$index_p14_]->save();
+                     $index_p14_++;
+                  }
+                  $index++;
+            }
+            
+        }
             $protocol->status = 1;
             $protocol->update($request->all());
             return redirect()->route('protocols.index');
