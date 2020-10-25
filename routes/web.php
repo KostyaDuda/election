@@ -54,6 +54,12 @@ Route::get('/exportword/dublicaties', 'Export\ExportController@dublicaties')->na
 Route::get('/exportword/kvoty', 'Export\ExportController@kvoty')->name('export.kvoty');
 Route::get('/exportword/mains', 'Export\ExportController@mains')->name('export.mains');
 Route::get('/exportword/{personal}/export_personals_', 'Export\ExportController@export_personals_')->name('export.export_personals_');
+Route::get('/exportword/{type}/protocol', 'Export\ExportController@protocol')->name('export.protocol');
+Route::get('/exportword/{state}/protocol_state', 'Export\ExportController@protocol_state')->name('export.protocol_state');
+
+Route::get('/rate','Protocol\ProtocolController@rate')->name('protocols.rate');
+Route::get('/rate_list/{type}','Protocol\ProtocolController@rate_list')->name('protocols.rate_list');
+Route::get('/rate_state/{state_id}','Protocol\ProtocolController@rate_state')->name('protocols.rate_state');
 
 
 Route::get('/home', 'HomeController@index')->name('home');

@@ -10,7 +10,7 @@
  <div class="container">
  <div class="row">
     <div class="col-lg-5 col-md-5"> 
-        <h1>Протоколи ДВК<img width="100px" src="/img/protocol.png">
+        <h1>Протоколи ДВК<img width="100px" src="/img/vote.png">
     </div>
     <div class="col-lg-5 col-md-5"> 
         <h2>Кількість зроблених {{$count}}/{{4*$count_dis}}</h2></h1>

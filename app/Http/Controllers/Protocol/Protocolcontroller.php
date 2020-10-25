@@ -14,6 +14,7 @@ use App\p12;
 use App\p14;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class Protocolcontroller extends Controller
 {
@@ -75,7 +76,7 @@ class Protocolcontroller extends Controller
      */
     public function store(Request $request)
     {
-       
+
         $district_check = District::where('id',$request->district_id)->count();
         $protocol_check = Protocol::where('district_id',$request->district_id)->where('type',$request->type)->count();
         if($district_check == 0)
@@ -105,6 +106,7 @@ class Protocolcontroller extends Controller
                     $p12->protocol_id = $protocol->id;
                     $p12->party_id = $party->id;
                     $p12->state_id = $state->id;
+                    $p12->type = $protocol->type;
                     p12::create($p12->toArray());
                     foreach($party->getCandidat_all($party->id) as $candidat)
                     {
@@ -113,6 +115,7 @@ class Protocolcontroller extends Controller
                         $p14->party_id = $candidat->party_id;
                         $p14->candidat_id = $candidat->id;
                         $p14->state_id =  $state->id;
+                        $p14->type = $protocol->type;
                         p14::create($p14->toArray());
                     }
                 }
@@ -126,6 +129,7 @@ class Protocolcontroller extends Controller
                     $p12 = new p12;
                     $p12->protocol_id = $protocol->id;
                     $p12->party_id = $party->id;
+                    $p12->type = $protocol->type;
                     p12::create($p12->toArray());
                     foreach($party->getCandidat_all($party->id) as $candidat)
                     {
@@ -133,6 +137,7 @@ class Protocolcontroller extends Controller
                         $p14->protocol_id = $protocol->id;
                         $p14->party_id = $candidat->party_id;
                         $p14->candidat_id = $candidat->id;
+                        $p14->type = $protocol->type;
                         p14::create($p14->toArray());
                     }
                 }
@@ -146,6 +151,7 @@ class Protocolcontroller extends Controller
                     $p12 = new p12;
                     $p12->protocol_id = $protocol->id;
                     $p12->party_id = $party->id;
+                    $p12->type = $protocol->type;
                     p12::create($p12->toArray());
                     foreach($party->getCandidat_all($party->id) as $candidat)
                     {
@@ -153,6 +159,7 @@ class Protocolcontroller extends Controller
                         $p14->protocol_id = $protocol->id;
                         $p14->party_id = $candidat->party_id;
                         $p14->candidat_id = $candidat->id;
+                        $p14->type = $protocol->type;
                         p14::create($p14->toArray());
                     }
                 }
@@ -211,6 +218,7 @@ class Protocolcontroller extends Controller
     public function update(Request $request, Protocol $protocol)
     {
         $district_check = District::where('id',$request->district_id)->count();
+        $district_state = District::where('id',$request->district_id)->first();
         if($district_check == 0)
         {
             return back()->withErrors([
@@ -301,6 +309,7 @@ class Protocolcontroller extends Controller
             
         }
             $protocol->status = 1;
+            $protocol->state_id = $district_state->state_id;
             $protocol->update($request->all());
             return redirect()->route('protocols.index');
         }
@@ -315,6 +324,198 @@ class Protocolcontroller extends Controller
     public function destroy(Protocol $protocol)
     {
         //
+    }
+
+    public function rate()
+    {
+        $states = State::all();
+        $types = [
+            "Місто",
+            "Область",
+            "Район",
+            "Мер"
+        ];
+        return view('Protocol/rate', compact('states','types'));
+    }
+
+    public function rate_list($type)
+    {
+        //dd($type);
+        $list_p = [];
+        $p1sum = DB::table('protocols')
+                ->select('p1', 
+                DB::raw('SUM(p1) as p1sum'))
+                ->groupBy('type')->where('type',$type)->sum('p1');
+        array_push($list_p,$p1sum);
+        $p2sum = DB::table('protocols')
+                ->select('p2', 
+                DB::raw('SUM(p2) as p2sum'))
+                ->groupBy('type')->where('type',$type)->sum('p2');
+        array_push($list_p,$p2sum);
+
+        $p3sum = DB::table('protocols')
+                ->select('p3', 
+                DB::raw('SUM(p3) as p3sum'))
+                ->groupBy('type')->where('type',$type)->sum('p3');
+                array_push($list_p,$p3sum);
+        $p4sum = DB::table('protocols')
+                ->select('p4', 
+                DB::raw('SUM(p4) as p4sum'))
+                ->groupBy('type')->where('type',$type)->sum('p4');
+        array_push($list_p,$p4sum);
+
+        $p5sum = DB::table('protocols')
+                ->select('p5', 
+                DB::raw('SUM(p5) as p5sum'))
+                ->groupBy('type')->where('type',$type)->sum('p5');
+        array_push($list_p,$p5sum);
+
+        $p6sum = DB::table('protocols')
+                ->select('p6', 
+                DB::raw('SUM(p6) as p6sum'))
+                ->groupBy('type')->where('type',$type)->sum('p6');
+        array_push($list_p,$p6sum);
+
+        $p7sum = DB::table('protocols')
+                ->select('p7', 
+                DB::raw('SUM(p7) as p7sum'))
+                ->groupBy('type')->where('type',$type)->sum('p7');
+        array_push($list_p,$p7sum);
+
+        $p8sum = DB::table('protocols')
+                ->select('p8', 
+                DB::raw('SUM(p8) as p8sum'))
+                ->groupBy('type')->where('type',$type)->sum('p8');
+        array_push($list_p,$p8sum);
+
+        $p9sum = DB::table('protocols')
+                ->select('p9', 
+                DB::raw('SUM(p9) as p9sum'))
+                ->groupBy('type')->where('type',$type)->sum('p9');
+        array_push($list_p,$p9sum);
+
+        $p10sum = DB::table('protocols')
+        ->select('p10', 
+        DB::raw('SUM(p10) as p10sum'))
+        ->groupBy('type')->where('type',$type)->sum('p10');
+        array_push($list_p,$p10sum);
+
+        $p11sum = DB::table('protocols')
+        ->select('p11', 
+        DB::raw('SUM(p11) as p11sum'))
+        ->groupBy('type')->where('type',$type)->sum('p11');
+        array_push($list_p,$p11sum);
+
+        if($type == "Мер")
+        {
+            $pmayor = pmayor::groupBy('mayor_id')
+        ->selectRaw('mayor_id, sum(count_voises) as count_voises')->get(); 
+        
+        }
+        else
+        {
+            $p12 = p12::groupBy('party_id')
+            ->selectRaw('sum(count_voises) as count_voises, party_id')->where('type',$type)
+            ->get();
+            
+            $p13 = p12::groupBy('party_id')
+            ->selectRaw('sum(p13) as p13_count, party_id')->where('type',$type)
+            ->get();
+    
+            $p14 = p14::groupBy('candidat_id','party_id')
+            ->selectRaw('sum(count_voises) as count_voises, party_id, candidat_id')->where('type',$type)
+            ->get();
+        }
+
+        return view('Protocol/rate_list',compact('list_p','type','p12','p13','p14','pmayor'));
+    }
+
+    public function rate_state($state_id)
+    {
+        //dd($type);
+        $list_p = [];
+        $p1sum = DB::table('protocols')
+                ->select('p1', 
+                DB::raw('SUM(p1) as p1sum'))
+                ->groupBy('type')->where('state_id',$state_id)->where('type',"Місто")->sum('p1');
+
+        array_push($list_p,$p1sum);
+        $p2sum = DB::table('protocols')
+                ->select('p2', 
+                DB::raw('SUM(p2) as p2sum'))
+                ->groupBy('type')->where('state_id',$state_id)->where('type',"Місто")->sum('p2');
+        array_push($list_p,$p2sum);
+
+        $p3sum = DB::table('protocols')
+                ->select('p3', 
+                DB::raw('SUM(p3) as p3sum'))
+                ->groupBy('type')->where('state_id',$state_id)->where('type',"Місто")->sum('p3');
+                array_push($list_p,$p3sum);
+        $p4sum = DB::table('protocols')
+                ->select('p4', 
+                DB::raw('SUM(p4) as p4sum'))
+                ->groupBy('type')->where('state_id',$state_id)->where('type',"Місто")->sum('p4');
+        array_push($list_p,$p4sum);
+
+        $p5sum = DB::table('protocols')
+                ->select('p5', 
+                DB::raw('SUM(p5) as p5sum'))
+                ->groupBy('type')->where('state_id',$state_id)->where('type',"Місто")->sum('p5');
+        array_push($list_p,$p5sum);
+
+        $p6sum = DB::table('protocols')
+                ->select('p6', 
+                DB::raw('SUM(p6) as p6sum'))
+                ->groupBy('type')->where('state_id',$state_id)->where('type',"Місто")->sum('p6');
+        array_push($list_p,$p6sum);
+
+        $p7sum = DB::table('protocols')
+                ->select('p7', 
+                DB::raw('SUM(p7) as p7sum'))
+                ->groupBy('type')->where('state_id',$state_id)->where('type',"Місто")->sum('p7');
+        array_push($list_p,$p7sum);
+
+        $p8sum = DB::table('protocols')
+                ->select('p8', 
+                DB::raw('SUM(p8) as p8sum'))
+                ->groupBy('type')->where('state_id',$state_id)->where('type',"Місто")->sum('p8');
+        array_push($list_p,$p8sum);
+
+        $p9sum = DB::table('protocols')
+                ->select('p9', 
+                DB::raw('SUM(p9) as p9sum'))
+                ->groupBy('type')->where('state_id',$state_id)->where('type',"Місто")->sum('p9');
+        array_push($list_p,$p9sum);
+
+        $p10sum = DB::table('protocols')
+        ->select('p10', 
+        DB::raw('SUM(p10) as p10sum'))
+        ->groupBy('type')->where('state_id',$state_id)->where('type',"Місто")->sum('p10');
+        array_push($list_p,$p10sum);
+
+        $p11sum = DB::table('protocols')
+        ->select('p11', 
+        DB::raw('SUM(p11) as p11sum'))
+        ->groupBy('type')->where('state_id',$state_id)->where('type',"Місто")->sum('p11');
+        array_push($list_p,$p11sum);
+
+
+    
+            $p12 = p12::groupBy('party_id')
+            ->selectRaw('sum(count_voises) as count_voises, party_id')->where('state_id',$state_id)->where('type',"Місто")
+            ->get();
+            
+            $p13 = p12::groupBy('party_id')
+            ->selectRaw('sum(p13) as p13_count, party_id')->where('state_id',$state_id)->where('type',"Місто")
+            ->get();
+
+    
+            $p14 = p14::groupBy('candidat_id','party_id')
+            ->selectRaw('sum(count_voises) as count_voises, party_id, candidat_id')->where('state_id',$state_id)->where('type',"Місто")
+            ->get();
+      
+        $state = State::where('id',$state_id)->first();
+        return view('Protocol/rate_state',compact('list_p','state','p12','p13','p14','pmayor'));
     }
 
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class p14 extends Model
 {
-    protected $fillable = ['protocol_id','party_id','candidat_id','state_id','count_voises'];
+    protected $fillable = ['protocol_id','type','party_id','candidat_id','state_id','count_voises'];
 
     public function getCandidat_by_protocol($id)
     {

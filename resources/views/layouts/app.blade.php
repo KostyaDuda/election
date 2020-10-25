@@ -70,6 +70,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('protocols.index') }}">Голосування</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('protocols.rate') }}">Підрахунок</a>
+                            </li>
                          @endif
 
                     </ul>
