@@ -26,6 +26,9 @@ Route::resource('members','Member\MemberController');
 Route::resource('personals','Personal\PersonalController');
 Route::resource('protocols','Protocol\ProtocolController');
 
+Route::get('/protocols/{type}/create_','Protocol\ProtocolController@create_')->name('protocols.create_');
+Route::get('/check_data','Protocol\ProtocolController@check_data')->name('protocols.check_data');
+
 Route::get('/states/{state}/destroy_all', 'State\StateController@destroy_all')->name('states.destroy_all');
 Route::get('/states/{state}/candidats_', 'State\StateController@candidats_')->name('states.candidats');
 

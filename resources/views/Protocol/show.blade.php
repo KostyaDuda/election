@@ -40,11 +40,11 @@ div {
   @method('PUT')
   @csrf
   <div class="form-group">          
-                                    @foreach ($errors->all() as $error)                                            
+                                    @foreach ($erors as $error)                                            
                                         <div class="ui-widget">
 	                                         <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
 		                                          <p><span class="ui-icon ui-icon-alert" style="float: left; margin-bottom: 3.em;"></span>
-		                                                <strong>Alert:</strong></p>
+		                                                <strong>Alert:</strong>{{$error->string}}</p>
 	                                          </div>
                                          </div>
                                          @endforeach
@@ -147,7 +147,7 @@ div {
         <tbody>
         @foreach($p12 as $key => $p)
         <tr>
-           <th scope="row">{{$p->getParty_by_protocol()->id}}</th>
+           <th scope="row">{{$loop->index +1}}</th>
                <td>{{$p->getParty_by_protocol()->name}}</td>
                </td>
                <td><input class="form-control" name="p12_{{$key}}" value="{{$p->count_voises}}" type="number" required></td>
@@ -176,7 +176,7 @@ div {
         <tbody>
         @foreach($p12 as $key => $p)
         <tr>
-           <th scope="row">{{$p->getParty_by_protocol()->id}}</th>
+           <th scope="row">{{$loop->index +1}}</th>
                <td>{{$p->getParty_by_protocol()->name}}</td>
                </td>
                <td><input class="form-control" name="p13_{{$key}}" value="{{$p->p13}}" type="number" required></td>
@@ -202,6 +202,7 @@ div {
                      </tr>
                   </thead>
                 <tbody>
+    
                     @foreach($p14 as $key => $candidat)
                     @if($candidat->party_id == $p->party_id)
                       <tr>
@@ -209,6 +210,7 @@ div {
                       <td>{{$candidat->getCandidat()->name}}</td>
                       <td>
                           <input  class="form-control" name="p14_{{$key}}" value="{{$candidat->count_voises}}" type="number" required>
+           
                        </td>
                       </tr>
                       @endif
@@ -252,7 +254,10 @@ div {
       </table>
       </div>
     @endif
-
+  <div class="form-group">
+  <label for="exampleInputEmail1">Акт</label>
+         <input type="checkbox" name="act" id="id" value="1" class="form-control" {{ $protocol->act == 1 ? 'checked' : '' }}>
+  </div>
   <button type="submit" class="btn btn-primary btn-warning">Ввести</button>
   </form>
   </div>

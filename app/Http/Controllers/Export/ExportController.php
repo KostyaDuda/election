@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Export;
 use App\District;
 use App\Personal;
 use App\Member;
+use App\Candidat;
 use App\Present;
 use App\State;
 use App\p12;
+use App\partybystate;
+use App\Protocol;
+use App\Mayor;
 use App\p14;
 use App\pmayor;
 use Illuminate\Http\Request;
@@ -869,6 +873,40 @@ class ExportController extends Controller
              $table2->addCell(2000)->addText("{$mayor->count_voises}");
           }
 
+          $protocols = Protocol::where('type',"Мер")->get();
+
+          $pmayor = pmayor::all();
+
+          $mayors = Mayor::all();
+  
+          $table = $section->addText("ВІДОМОСТІ, по мерам.", $headerstyle);
+          
+          $table = $section->addTable($fancyTableStyleName);
+          
+          $table->addRow(900);
+          $table->addCell(2000, $fancyTableCellStyle)->addText("№Номер дільниці", $fancyTableFontStyle);
+          foreach($mayors as $mayor)
+          {
+              $table->addCell(2000, $fancyTableCellStyle)->addText($mayor->second_name, $fancyTableFontStyle);
+          }
+          foreach($protocols as $protocol)
+          {
+              $pmayors = pmayor::where('protocol_id',$protocol->id)->get();
+  
+              $table->addRow(900);
+              $table->addCell(2000, $fancyTableCellStyle)->addText($protocol->district_id, $fancyTableFontStyle);
+  
+              foreach($pmayors as $pmayor)
+              {
+                  $table->addCell(2000, $fancyTableCellStyle)->addText($pmayor->count_voises, $fancyTableFontStyle);
+              }
+  
+          }
+
+
+
+
+
 
         }
         else
@@ -885,13 +923,13 @@ class ExportController extends Controller
             ->selectRaw('sum(count_voises) as count_voises, party_id, candidat_id')->where('type',$type)
             ->get();
 
-            $table = $section->addText("12.", $headerstyle);
+            $table2 = $section->addText("12.кількість голосів виборців, які підтримали територіальний виборчий список кандидатів у депутати від кожної місцевої організації політичної партії у межах територіального виборчого округу:" );
             $table2 = $section->addTable($fancyTableStyleName);
         
             $table2->addRow(900);
-        $table2->addCell(2000, $fancyTableCellStyle)->addText('№', $fancyTableFontStyle);
-        $table2->addCell(2000, $fancyTableCellStyle)->addText('Назва місцевої організації політичної партії', $fancyTableFontStyle);
-        $table2->addCell(2000, $fancyTableCellStyle)->addText('Кількість голосів виборців, 
+            $table2->addCell(2000, $fancyTableCellStyle)->addText('№', $fancyTableFontStyle);
+            $table2->addCell(2000, $fancyTableCellStyle)->addText('Назва місцевої організації політичної партії', $fancyTableFontStyle);
+            $table2->addCell(2000, $fancyTableCellStyle)->addText('Кількість голосів виборців, 
         які підтримали територіальний виборчий список місцевої організації політичної партії
         (цифрами)', $fancyTableFontStyle);  
 
@@ -903,7 +941,7 @@ class ExportController extends Controller
              $table2->addCell(2000)->addText("{$p->count_voises}");
           }
 
-          $table = $section->addText("13.", $headerstyle);
+          $table = $section->addText("13. кількість голосів виборців, які підтримали весь територіальний виборчий список кандидатів у депутати, не підтримавши окремого кандидата в депутати з цього списку, від кожної місцевої організації політичної партії у межах територіального виборчого округу:");
             $table2 = $section->addTable($fancyTableStyleName);
         
             $table2->addRow(900);
@@ -922,7 +960,7 @@ class ExportController extends Controller
           }
 
 
-          $table = $section->addText("14.", $headerstyle);
+          $table = $section->addText("14.кількість голосів виборців, які підтримали кожного кандидата в депутати, включеного до територіального виборчого списку кандидатів у депутати від кожної місцевої організації політичної партії, у межах територіального виборчого округу:");
             $table2 = $section->addTable($fancyTableStyleName);
         
               
@@ -946,10 +984,159 @@ class ExportController extends Controller
                 }
              }
           }
+   //Відомості
+          //p1-11
+          $protocols = Protocol::where('type',"Область")->get();
 
+          $table = $section->addText("Відомості ВІДОМОСТІ,
+          зазначені у пунктах 1 – 14 
+          ", $headerstyle);
+          $table = $section->addTable($fancyTableStyleName);
+          $table->addRow(900);
+          $table->addCell(2000)->addText("Номер виборчої дільниці",$fancyTableFontStyle);
+          $table->addCell(2000)->addText("п1",$fancyTableFontStyle);
+          $table->addCell(2000)->addText("п2",$fancyTableFontStyle);          
+          $table->addCell(2000)->addText("п3",$fancyTableFontStyle);          
+          $table->addCell(2000)->addText("п4",$fancyTableFontStyle);          
+          $table->addCell(2000)->addText("п5",$fancyTableFontStyle);
+          $table->addCell(2000)->addText("п6",$fancyTableFontStyle);
+          $table->addCell(2000)->addText("п7",$fancyTableFontStyle);
+          $table->addCell(2000)->addText("п8",$fancyTableFontStyle);      
+          $table->addCell(2000)->addText("п9",$fancyTableFontStyle);
+          $table->addCell(2000)->addText("п10",$fancyTableFontStyle);
+          $table->addCell(2000)->addText("п11",$fancyTableFontStyle);
+
+          
+          
+          foreach($protocols as $protocol)
+          {
+            $table->addRow(900);
+            $table->addCell(2000)->addText($protocol->district_id,$fancyTableFontStyle);
+            $table->addCell(2000)->addText($protocol->p1,$fancyTableFontStyle);          
+            $table->addCell(2000)->addText($protocol->p2,$fancyTableFontStyle);          
+            $table->addCell(2000)->addText($protocol->p3,$fancyTableFontStyle);          
+            $table->addCell(2000)->addText($protocol->p4,$fancyTableFontStyle);
+            $table->addCell(2000)->addText($protocol->p5,$fancyTableFontStyle);
+            $table->addCell(2000)->addText($protocol->p6,$fancyTableFontStyle);
+            $table->addCell(2000)->addText($protocol->p7,$fancyTableFontStyle);      
+            $table->addCell(2000)->addText($protocol->p8,$fancyTableFontStyle);
+            $table->addCell(2000)->addText($protocol->p9,$fancyTableFontStyle);
+            $table->addCell(2000)->addText($protocol->p10,$fancyTableFontStyle);
+            $table->addCell(2000)->addText($protocol->p11,$fancyTableFontStyle);
+          }
+          
+        
+         
+        $protocols = Protocol::where('type',"Область")->get();
+
+
+         //Відомості
+          //p12
+         $protocols = Protocol::where('type',"Область")->get();
+
+        $parties = partybystate::where('type',"Область")->orderby('by_state')->get();
+
+        $table = $section->addText("ВІДОМОСТІ,
+        зазначені у пункті 15.", $headerstyle);
+        
+        $table = $section->addTable($fancyTableStyleName);
+        
+        $table->addRow(900);
+        $table->addCell(2000, $fancyTableCellStyle)->addText("№Номер дільниці", $fancyTableFontStyle);
+        foreach($parties as $party)
+        {
+            $table->addCell(2000, $fancyTableCellStyle)->addText($party->getParty()->name, $fancyTableFontStyle);
+        }
+        foreach($protocols as $protocol)
+        {
+            $p12 = p12::where('protocol_id',$protocol->id)->orderby('by_state')->get();
+
+            $table->addRow(900);
+            $table->addCell(2000, $fancyTableCellStyle)->addText($protocol->district_id, $fancyTableFontStyle);
+
+            foreach($p12 as $p)
+            {
+                $table->addCell(2000, $fancyTableCellStyle)->addText($p->count_voises, $fancyTableFontStyle);
+            }
 
         }
 
+        //Відомості
+          //p13
+          $protocols = Protocol::where('type',"Область")->get();
+
+          $parties = partybystate::where('type',"Область")->orderby('by_state')->get();
+  
+          $table = $section->addText("ВІДОМОСТІ,
+          зазначені у пункті 16 протоколу територіальної виборчої комісії ", $headerstyle);
+          
+          $table = $section->addTable($fancyTableStyleName);
+          
+          $table->addRow(900);
+          $table->addCell(2000, $fancyTableCellStyle)->addText("№Номер дільниці", $fancyTableFontStyle);
+          foreach($parties as $party)
+          {
+              $table->addCell(2000, $fancyTableCellStyle)->addText($party->getParty()->name, $fancyTableFontStyle);
+          }
+          foreach($protocols as $protocol)
+          {
+              $p12 = p12::where('protocol_id',$protocol->id)->orderby('by_state')->get();
+  
+              $table->addRow(900);
+              $table->addCell(2000, $fancyTableCellStyle)->addText($protocol->district_id, $fancyTableFontStyle);
+  
+              foreach($p12 as $p)
+              {
+                  $table->addCell(2000, $fancyTableCellStyle)->addText($p->p13, $fancyTableFontStyle);
+              }
+  
+          }
+
+           //Відомості
+          //p16
+          $protocols = Protocol::where('type',"Область")->get();
+
+          $parties = partybystate::where('type',"Область")->orderBy('by_state')->get();
+  
+          $table = $section->addText("ВІДОМОСТІ,
+          зазначені у пункті 17 
+          ", $headerstyle);
+          
+             foreach($parties as $party)
+             {
+            
+                $table = $section->addText($party->getParty()->name, $headerstyle);
+                $table = $section->addTable($fancyTableStyleName);
+                $table->addRow();
+                $candidats = Candidat::where('party_id',$party->id)->get();
+        
+                $table->addCell(2000)->addText("Номер Дільниці");
+
+                foreach($candidats as $candidat)
+                {
+                    $table->addCell(2000)->addText($candidat->name,$fancyTableFontStyle);
+                }
+
+                $protocols = Protocol::where('type',"Область")->get();
+
+  
+ 
+                foreach($protocols as $protocol)
+                {
+                    $table->addRow();
+                    $p14 = p14::where('party_id',$party->id)->where('protocol_id',$protocol->id)->get();
+                    $table->addCell(2000)->addText($protocol->district_id,$fancyTableFontStyle);
+
+                    foreach($p14 as $p)
+                    {
+                            $table->addCell(2000)->addText($p->count_voises,$fancyTableFontStyle);
+                    }
+                    
+                }
+            }
+            
+        }
+        
           $objectWriter = IOFactory::createWriter($phpWord, 'Word2007');
             try {
                 $name = 'tvk'.$type.'.docx';
@@ -1183,7 +1370,8 @@ class ExportController extends Controller
             $table2->addCell(2000, $fancyTableCellStyle)->addText('№', $fancyTableFontStyle);
              $table2->addCell(2000, $fancyTableCellStyle)->addText('ПІБ', $fancyTableFontStyle);
              $table2->addCell(2000, $fancyTableCellStyle)->addText('Кількість голосів', $fancyTableFontStyle);
-             foreach($p14 as $key => $candidat){
+             foreach($p14 as $key => $candidat)
+             {
                 if($candidat->party_id == $p->party_id)
                 {
                 $table2->addRow();
@@ -1196,7 +1384,160 @@ class ExportController extends Controller
           }
 
 
+           //Відомості
+          //p1-11
+          $protocols = Protocol::where('type',"Місто")->where('state_id',$state_id)->get();
+
+          $table = $section->addText("Відомості ВІДОМОСТІ,
+          зазначені у пунктах 1 – 14 
+          ", $headerstyle);
+          $table = $section->addTable($fancyTableStyleName);
+          $table->addRow(900);
+          $table->addCell(2000)->addText("Номер виборчої дільниці",$fancyTableFontStyle);
+          $table->addCell(2000)->addText("п1",$fancyTableFontStyle);
+          $table->addCell(2000)->addText("п2",$fancyTableFontStyle);          
+          $table->addCell(2000)->addText("п3",$fancyTableFontStyle);          
+          $table->addCell(2000)->addText("п4",$fancyTableFontStyle);          
+          $table->addCell(2000)->addText("п5",$fancyTableFontStyle);
+          $table->addCell(2000)->addText("п6",$fancyTableFontStyle);
+          $table->addCell(2000)->addText("п7",$fancyTableFontStyle);
+          $table->addCell(2000)->addText("п8",$fancyTableFontStyle);      
+          $table->addCell(2000)->addText("п9",$fancyTableFontStyle);
+          $table->addCell(2000)->addText("п10",$fancyTableFontStyle);
+          $table->addCell(2000)->addText("п11",$fancyTableFontStyle);
+
+          
+          
+          foreach($protocols as $protocol)
+          {
+            $table->addRow(900);
+            $table->addCell(2000)->addText($protocol->district_id,$fancyTableFontStyle);
+            $table->addCell(2000)->addText($protocol->p1,$fancyTableFontStyle);          
+            $table->addCell(2000)->addText($protocol->p2,$fancyTableFontStyle);          
+            $table->addCell(2000)->addText($protocol->p3,$fancyTableFontStyle);          
+            $table->addCell(2000)->addText($protocol->p4,$fancyTableFontStyle);
+            $table->addCell(2000)->addText($protocol->p5,$fancyTableFontStyle);
+            $table->addCell(2000)->addText($protocol->p6,$fancyTableFontStyle);
+            $table->addCell(2000)->addText($protocol->p7,$fancyTableFontStyle);      
+            $table->addCell(2000)->addText($protocol->p8,$fancyTableFontStyle);
+            $table->addCell(2000)->addText($protocol->p9,$fancyTableFontStyle);
+            $table->addCell(2000)->addText($protocol->p10,$fancyTableFontStyle);
+            $table->addCell(2000)->addText($protocol->p11,$fancyTableFontStyle);
+          }
+          
         
+         
+        
+
+
+         //Відомості
+          //p12
+         $protocols = Protocol::where('type',"Місто")->where('state_id',$state_id)->get();
+
+        $parties = partybystate::where('type',"Місто")->where('state_id',$state_id)->orderby('by_city')->get();
+
+        $table = $section->addText("ВІДОМОСТІ,
+        зазначені у пункті 15.", $headerstyle);
+        
+        $table = $section->addTable($fancyTableStyleName);
+        
+        $table->addRow(900);
+        $table->addCell(2000, $fancyTableCellStyle)->addText("№Номер дільниці", $fancyTableFontStyle);
+        foreach($parties as $party)
+        {
+            $table->addCell(2000, $fancyTableCellStyle)->addText($party->getParty()->name, $fancyTableFontStyle);
+        }
+        foreach($protocols as $protocol)
+        {
+            $p12 = p12::where('protocol_id',$protocol->id)->orderby('by_city')->get();
+
+            $table->addRow(900);
+            $table->addCell(2000, $fancyTableCellStyle)->addText($protocol->district_id, $fancyTableFontStyle);
+
+            foreach($p12 as $p)
+            {
+                $table->addCell(2000, $fancyTableCellStyle)->addText($p->count_voises, $fancyTableFontStyle);
+            }
+
+        }
+
+        //Відомості
+          //p13
+          $protocols = Protocol::where('type',"Місто")->where('state_id',$state_id)->get();
+
+          $parties = partybystate::where('type',"Місто")->where('state_id',$state_id)->orderby('by_city')->get();
+  
+          $table = $section->addText("ВІДОМОСТІ,
+          зазначені у пункті 16 протоколу територіальної виборчої комісії ", $headerstyle);
+          
+          $table = $section->addTable($fancyTableStyleName);
+          
+          $table->addRow(900);
+          $table->addCell(2000, $fancyTableCellStyle)->addText("№Номер дільниці", $fancyTableFontStyle);
+          foreach($parties as $party)
+          {
+              $table->addCell(2000, $fancyTableCellStyle)->addText($party->getParty()->name, $fancyTableFontStyle);
+          }
+          foreach($protocols as $protocol)
+          {
+              $p12 = p12::where('protocol_id',$protocol->id)->orderby('by_city')->get();
+  
+              $table->addRow(900);
+              $table->addCell(2000, $fancyTableCellStyle)->addText($protocol->district_id, $fancyTableFontStyle);
+  
+              foreach($p12 as $p)
+              {
+                  $table->addCell(2000, $fancyTableCellStyle)->addText($p->p13, $fancyTableFontStyle);
+              }
+  
+          }
+
+           //Відомості
+          //p16
+          $protocols = Protocol::where('type',"Місто")->where('state_id',$state_id)->get();
+
+          $parties = partybystate::where('type',"Місто")->where('state_id',$state_id)->orderBy('by_city')->get();
+  
+          $table = $section->addText("ВІДОМОСТІ,
+          зазначені у пункті 17 
+          ", $headerstyle);
+          
+             foreach($parties as $party)
+             {
+            
+                $table = $section->addText($party->getParty()->name, $headerstyle);
+                $table = $section->addTable($fancyTableStyleName);
+                $table->addRow();
+                $candidats = Candidat::where('party_id',$party->id)->get();
+        
+                $table->addCell(2000)->addText("Номер Дільниці");
+
+                foreach($candidats as $candidat)
+                {
+                    $table->addCell(2000)->addText($candidat->name,$fancyTableFontStyle);
+                }
+
+                $protocols = Protocol::where('type',"Місто")->where('state_id',$state_id)->get();
+
+  
+ 
+                foreach($protocols as $protocol)
+                {
+                    $table->addRow();
+                    $p14 = p14::where('party_id',$party->id)->where('protocol_id',$protocol->id)->get();
+                    $table->addCell(2000)->addText($protocol->district_id,$fancyTableFontStyle);
+
+                    foreach($p14 as $p)
+                    {
+                            $table->addCell(2000)->addText($p->count_voises,$fancyTableFontStyle);
+                    }
+                    
+                }
+            }
+            
+        
+
+
 
           $objectWriter = IOFactory::createWriter($phpWord, 'Word2007');
             try {
@@ -1206,6 +1547,38 @@ class ExportController extends Controller
             }
  
         return response()->download(storage_path($name));
+    }
+
+    public function p12_state()
+    {
+       
+        $phpWord = new PhpWord();
+        $sectionStyle = array(
+            'marginTop' => 500,
+            'marginBottom' => 0,
+            'colsSpace' => 1,
+            'gutter' => 1,
+            'marginRight' => 500,
+            'marginLeft' => 500,
+            'space' => array('line' => 1000)
+        );
+
+
+        $phpWord = new PhpWord();
+        $section = $phpWord->addSection();
+        $fancyTableStyleName = 'Fancy Table';
+        $fancyTableStyle = array('borderSize' => 1, 'borderColor' => '000000', 'cellMargin' => 40, 'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER);
+        $fancyTableFirstRowStyle = array('bgColor' => 'ffffff');
+        $fancyTableCellStyle = array('valign' => 'center');
+
+        $headerstyle = array('align' => 'center','size' => '48');
+
+        $fancyTableFontStyle = array('bold' => true);
+        $phpWord->addTableStyle($fancyTableStyleName, $fancyTableStyle, $fancyTableFirstRowStyle);
+        
+        
+
+
     }
 
 }

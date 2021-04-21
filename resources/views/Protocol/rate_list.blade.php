@@ -121,7 +121,7 @@ div {
          <th>Кількість голосів виборців, 
             які підтримали мера
          </th>
-         <th></th>
+         <th>%</th>
 
        </tr>
         </thead>
@@ -134,6 +134,7 @@ div {
                <td>{{$mayor->getMayor()->father_name}}</td>
                </td>
                <td>{{$mayor->count_voises}}</td>
+               <td>{{ number_format(($mayor->count_voises*100)/$pmayor_sum_voises, 2, '.', '')}}</td>
             </tr>
         @endforeach
         </tbody>
@@ -153,7 +154,7 @@ div {
             які підтримали територіальний виборчий список місцевої організації політичної партії
             (цифрами)
          </th>
-         <th></th>
+         <th>%</th>
 
        </tr>
         </thead>
@@ -164,8 +165,9 @@ div {
                <td>{{$p->getParty_by_protocol()->name}}</td>
                </td>
                <td>{{$p->count_voises}}</td>
+               <td>{{ number_format(($p->count_voises*100)/$pmayor_p12_voises, 2, '.', '')}}</td>
             </tr>
-
+            
         @endforeach
         </tbody>
       </table>

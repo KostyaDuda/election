@@ -35,7 +35,7 @@ div {
 }
 </style>
  <div class="container">
-    <h1>Створити Пртокол ДВК</h1>
+    <h1>Створити Протокол ДВК</h1>
   <form method="POST" enctype="multipart/form-data" action="{{route('protocols.store')}}">
   @csrf
   <div class="form-group">
@@ -54,10 +54,10 @@ div {
   <div class="form-group">
     <label for="exampleInputEmail1">Тип Виборчого Округу</label>
     <select name="type" id="type" class="form-control" id="exampleFormControlSelect1">
-      <option value="Місто">Місто</option>
-      <option value="Район">Район</option>
+      <!-- <option value="Місто">Місто</option>
       <option value="Область">Область</option>
-      <option value="Мер">Мер</option>
+      <option value="Мер">Мер</option> -->
+      <option value="{{$type}}">{{$type}}</option>
     </select>
   </div>
   <button type="submit" class="btn btn-primary btn-warning">Ввести</button>

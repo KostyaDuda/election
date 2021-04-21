@@ -11,6 +11,7 @@ use App\Partybystate;
 use App\District;
 use App\Candidat;
 use App\p12;
+use App\eror;
 use App\p14;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -63,9 +64,9 @@ class Protocolcontroller extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create_($type)
     {
-        return view('Protocol/create');
+        return view('Protocol/create', compact('type'));
     }
 
     /**
@@ -95,6 +96,8 @@ class Protocolcontroller extends Controller
         {
             Protocol::create($request->all());
             $protocol = Protocol::where('district_id',$request->district_id)->where('type',$request->type)->first();
+            $protocol->act = 0;
+            $protocol->save();
             if($protocol->type == "Місто")
             {
                 $district_ = $protocol->getDstrict();
@@ -106,6 +109,7 @@ class Protocolcontroller extends Controller
                     $p12->protocol_id = $protocol->id;
                     $p12->party_id = $party->id;
                     $p12->state_id = $state->id;
+                    $p12->by_city = $party->by_city;
                     $p12->type = $protocol->type;
                     p12::create($p12->toArray());
                     foreach($party->getCandidat_all($party->id) as $candidat)
@@ -113,6 +117,7 @@ class Protocolcontroller extends Controller
                         $p14 = new p14;
                         $p14->protocol_id = $protocol->id;
                         $p14->party_id = $candidat->party_id;
+                        $p14->by_city = $party->by_city;
                         $p14->candidat_id = $candidat->id;
                         $p14->state_id =  $state->id;
                         $p14->type = $protocol->type;
@@ -129,6 +134,7 @@ class Protocolcontroller extends Controller
                     $p12 = new p12;
                     $p12->protocol_id = $protocol->id;
                     $p12->party_id = $party->id;
+                    $p12->by_state = $party->by_state;
                     $p12->type = $protocol->type;
                     p12::create($p12->toArray());
                     foreach($party->getCandidat_all($party->id) as $candidat)
@@ -136,6 +142,7 @@ class Protocolcontroller extends Controller
                         $p14 = new p14;
                         $p14->protocol_id = $protocol->id;
                         $p14->party_id = $candidat->party_id;
+                        $p14->by_state = $party->by_state;
                         $p14->candidat_id = $candidat->id;
                         $p14->type = $protocol->type;
                         p14::create($p14->toArray());
@@ -202,10 +209,23 @@ class Protocolcontroller extends Controller
      */
     public function edit(Protocol $protocol)
     {
-        $p12 = p12::where('protocol_id',$protocol->id)->get();  
-        $p14 = p14::where('protocol_id',$protocol->id)->get();  
+        $erors = eror::where('protocol_id',$protocol->id)->get();
+
+        if($protocol->type == "Місто")
+        {
+            $p12 = p12::where('protocol_id',$protocol->id)->orderby('by_city')->get();  
+            //$p12 = p12::where('protocol_id',$protocol->id)->get();  
+            $p14 = p14::where('protocol_id',$protocol->id)->orderby('candidat_id')->orderby('by_city')->get(); 
+        }
+        else
+        {
+            $p12 = p12::where('protocol_id',$protocol->id)->orderby('by_state')->get();  
+            //$p12 = p12::where('protocol_id',$protocol->id)->get();  
+            $p14 = p14::where('protocol_id',$protocol->id)->orderby('by_state')->orderby('candidat_id')->get();  
+        }
+        $erors = eror::where('protocol_id',$protocol->id)->get();
         $mayors = pmayor::where('protocol_id',$protocol->id)->get();  
-        return view('Protocol/show', compact('protocol','p12','p14','mayors'));
+        return view('Protocol/show', compact('protocol','p12','p14','mayors','erors'));
     }
 
     /**
@@ -253,10 +273,23 @@ class Protocolcontroller extends Controller
             }
             else
             {
-            $p12 = p12::where('protocol_id',$protocol->id)->get();
-            $p14 = p14::where('protocol_id',$protocol->id)->get();
-            $p12count = p12::where('protocol_id',$protocol->id)->count();
-            $p14count = p14::where('protocol_id',$protocol->id)->count();
+
+                if($protocol->type == "Місто")
+                {
+                    $p12 = p12::where('protocol_id',$protocol->id)->orderby('by_city')->get();  
+                    $p12count = p12::where('protocol_id',$protocol->id)->orderby('by_city')->count();
+        
+                    $p14 = p14::where('protocol_id',$protocol->id)->orderby('by_city')->orderby('candidat_id')->get();
+                    $p14count = p14::where('protocol_id',$protocol->id)->orderby('by_city')->count();
+                }
+                else
+                {
+                    $p12 = p12::where('protocol_id',$protocol->id)->orderby('by_state')->get(); 
+                    $p12count = p12::where('protocol_id',$protocol->id)->orderby('by_state')->count();
+
+                    $p14 = p14::where('protocol_id',$protocol->id)->orderby('by_state')->orderby('candidat_id')->get(); 
+                    $p14count = p14::where('protocol_id',$protocol->id)->orderby('by_state')->count();
+                }
 
             $array_req = $request->all();
 
@@ -270,7 +303,7 @@ class Protocolcontroller extends Controller
                     if($index >= 15 && $index < $end)
                     {
                         $p12[$index_p12_]->count_voises = $req;
-                    $p12[$index_p12_]->save();
+                   $p12[$index_p12_]->save();
                     $index_p12_++;
                     }
                     $index++;
@@ -285,8 +318,8 @@ class Protocolcontroller extends Controller
                     if($index >= $start && $index < $end)
                     {
                         $p12[$index_p12_]->p13 = $req;
-                    $p12[$index_p12_]->save();
-                    $index_p12_++;
+                        $p12[$index_p12_]->save();
+                        $index_p12_++;
                     }
                     $index++;
             }
@@ -308,9 +341,13 @@ class Protocolcontroller extends Controller
             }
             
         }
-            $protocol->status = 1;
+          //  $protocol->status = 1;
+           // $this->check($request,$protocol);
             $protocol->state_id = $district_state->state_id;
+            
+            //dd($request->act);
             $protocol->update($request->all());
+            $this->check($protocol);
             return redirect()->route('protocols.index');
         }
     }
@@ -410,6 +447,8 @@ class Protocolcontroller extends Controller
         {
             $pmayor = pmayor::groupBy('mayor_id')
         ->selectRaw('mayor_id, sum(count_voises) as count_voises')->get(); 
+
+        $pmayor_sum_voises = pmayor::sum('count_voises');
         
         }
         else
@@ -425,9 +464,14 @@ class Protocolcontroller extends Controller
             $p14 = p14::groupBy('candidat_id','party_id')
             ->selectRaw('sum(count_voises) as count_voises, party_id, candidat_id')->where('type',$type)
             ->get();
+
+                $pmayor_p12_voises = p12::where('type','Область')->sum('count_voises');
+                $pmayor_p13_voises = p12::where('type','Область')->sum('p13');
+                //$pmayor_p14_voises = p14::sum('count_voises');
+
         }
 
-        return view('Protocol/rate_list',compact('list_p','type','p12','p13','p14','pmayor'));
+        return view('Protocol/rate_list',compact('list_p','type','p12','p13','p14','pmayor_sum_voises','pmayor','pmayor_p12_voises'));
     }
 
     public function rate_state($state_id)
@@ -513,9 +557,372 @@ class Protocolcontroller extends Controller
             $p14 = p14::groupBy('candidat_id','party_id')
             ->selectRaw('sum(count_voises) as count_voises, party_id, candidat_id')->where('state_id',$state_id)->where('type',"Місто")
             ->get();
+
+            $pmayor_p12__state_voises = p12::where('state_id',$state_id)->where('type',"Місто")->sum('count_voises');
       
         $state = State::where('id',$state_id)->first();
-        return view('Protocol/rate_state',compact('list_p','state','p12','p13','p14','pmayor'));
+        return view('Protocol/rate_state',compact('list_p','state','p12','pmayor_p12__state_voises','p13','p14','pmayor'));
     }
+
+
+    public function check_data()
+    {
+        //city
+        
+        $eror = eror::all();
+        foreach($eror as $e)
+        {
+            $e->delete();
+        }
+        $protocols_city = Protocol::where('type','Місто')->get();
+        $protocols_state = Protocol::where('type','Область')->get();
+        $protocols_mayor = Protocol::where('type','Мер')->get();
+
+       // $party_city = partybystate::where('','Область')->where('type','Місто')->get();
+       // $party_state = partybystate::where('type','Область')->get();
+        $mayors = pmayor::all();
+
+        foreach($protocols_city as $protocol)
+        {
+            if($protocol->p1 != $protocol->p2 + $protocol->p7)
+            {
+                $eror = new eror;               
+                $eror->protocol_id = $protocol->id;
+                $eror->district_id = $protocol->district_id;
+                $eror->string = "П1 НЕ ВІДПОВІДАЄ П2+П7";
+                
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+
+            }
+            if($protocol->p7 != $protocol->p5 + $protocol->p6)
+            {
+                $eror = new eror;
+                $eror->protocol_id = $protocol->id;
+                $eror->district_id = $protocol->district_id;
+                $eror->string = "П7 НЕ ВІДПОВІДАЄ П5+П6";
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+            }
+            if($protocol->p11 != $protocol->p9 - $protocol->p10)
+            {
+                $eror = new eror;
+                $eror->protocol_id = $protocol->id;
+                $eror->district_id = $protocol->district_id;
+                $eror->string = "П11 НЕ ВІДПОВІДАЄ П9+П10";
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+            }
+
+            $p12_party_sum = p12::where('protocol_id',$protocol->id)->sum('count_voises');
+            $p12_party_sum_p13 = p12::where('protocol_id',$protocol->id)->sum('p13');
+            $p12_party = p12::where('protocol_id',$protocol->id)->get();
+
+
+
+            if($p12_party_sum != $protocol->p11)
+            {
+                $eror = new eror;
+                $eror->protocol_id = $protocol->id;
+                $eror->district_id = $protocol->district_id;
+                $eror->string = "П11 НЕ ВІДПОВІДАЄ П12";
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+            }
+            
+            foreach($p12_party as $party)
+            {
+                $p14_sum = p14::where('protocol_id',$protocol->id)->where('party_id',$party->party_id)->sum('count_voises');
+                if($party->count_voises != $p14_sum + $party->p13)
+                {
+                    $eror = new eror;
+                    $eror->protocol_id = $protocol->id;
+                    $eror->district_id = $protocol->district_id;
+                    $eror->string = "П12 Партітї ".$party->getParty_by_protocol()->name." НЕ ВІДПОВІДАЄ П13+П14";
+                    $eror->save();
+                    $protocol->status = 0;
+                    $protocol->save();
+                }
+                
+                
+            }
+
+            $er = eror::where('protocol_id',$protocol->id)->count();
+
+            if($er == 0)
+            {
+                $protocol->status = 1;
+                $protocol->save();
+            }
+
+        }
+
+
+        foreach($protocols_state as $protocol)
+        {
+            if($protocol->p1 != $protocol->p2 + $protocol->p7)
+            {
+                $eror = new eror;               
+                $eror->protocol_id = $protocol->id;
+                $eror->district_id = $protocol->district_id;
+                $eror->string = "П1 НЕ ВІДПОВІДАЄ П2+П7";
+                $eror->status = 0;
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+
+            }
+            if($protocol->p7 != $protocol->p5 + $protocol->p6)
+            {
+                $eror = new eror;
+                $eror->protocol_id = $protocol->id;
+                $eror->district_id = $protocol->district_id;
+                $eror->string = "П7 НЕ ВІДПОВІДАЄ П5+П6";
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+            }
+            if($protocol->p11 != $protocol->p9 - $protocol->p10)
+            {
+                $eror = new eror;
+                $eror->protocol_id = $protocol->id;
+                $eror->district_id = $protocol->district_id;
+                $eror->string = "П11 НЕ ВІДПОВІДАЄ П9+П10";
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+            }
+
+            $p12_party_sum = p12::where('protocol_id',$protocol->id)->sum('count_voises');
+            $p12_party_sum_p13 = p12::where('protocol_id',$protocol->id)->sum('p13');
+            $p12_party = p12::where('protocol_id',$protocol->id)->get();
+
+
+
+            if($p12_party_sum != $protocol->p11)
+            {
+                $eror = new eror;
+                $eror->protocol_id = $protocol->id;
+                $eror->district_id = $protocol->district_id;
+                $eror->string = "П11 НЕ ВІДПОВІДАЄ П9+П6";
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+            }
+            
+            foreach($p12_party as $party)
+            {
+                $p14_sum = p14::where('protocol_id',$protocol->id)->where('party_id',$party->party_id)->sum('count_voises');
+                if($party->count_voises != $p14_sum + $party->p13)
+                {
+                    $eror = new eror;
+                    $eror->protocol_id = $protocol->id;
+                    $eror->district_id = $protocol->district_id;
+                    $eror->string = "П12 Партітї ".$party->getParty_by_protocol()->name." НЕ ВІДПОВІДАЄ П13+П14";
+                    $eror->save();
+                    $protocol->status = 0;
+                    $protocol->save();
+                }
+                
+                
+            }
+
+            $er = eror::where('protocol_id',$protocol->id)->count();
+
+            if($er == 0)
+            {
+                $protocol->status = 1;
+                $protocol->save();
+            }
+
+        }
+
+
+        foreach($protocols_mayor as $protocol)
+        {
+            if($protocol->p1 != $protocol->p2 + $protocol->p7)
+            {
+                $eror = new eror;               
+                $eror->protocol_id = $protocol->id;
+                $eror->string = "П1 НЕ ВІДПОВІДАЄ П2+П7";
+                $eror->status = 0;
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+
+            }
+            if($protocol->p7 != $protocol->p5 + $protocol->p6)
+            {
+                $eror = new eror;
+                $eror->protocol_id = $protocol->id;
+                $eror->string = "П7 НЕ ВІДПОВІДАЄ П5+П6";
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+            }
+            if($protocol->p11 != $protocol->p9 - $protocol->p10)
+            {
+                $eror = new eror;
+                $eror->protocol_id = $protocol->id;
+                $eror->string = "П11 НЕ ВІДПОВІДАЄ П9+П10";
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+            }
+
+            $p12_mayor_sum = pmayor::where('protocol_id',$protocol->id)->sum('count_voises');
+
+
+            if($p12_mayor_sum != $protocol->p11)
+            {
+                $eror = new eror;
+                $eror->protocol_id = $protocol->id;
+                $eror->string = "П11 НЕ ВІДПОВІДАЄ П12";
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+            }
+            
+
+            $er = eror::where('protocol_id',$protocol->id)->count();
+
+            if($er == 0)
+            {
+                $protocol->status = 1;
+                $protocol->save();
+            }
+
+        }
+        return redirect()->route('protocols.index');
+    }
+
+    public function check(Protocol $protocol)
+    {
+        $eror_check = eror::where('protocol_id',$protocol->id)->get();
+        foreach($eror_check as $e)
+        {
+            $e->delete();
+        }
+        if($protocol->p1 != $protocol->p2 + $protocol->p7 && $protocol->act == 0)
+            {
+                $eror = new eror;               
+                $eror->create();
+                $eror->district_id = $protocol->district_id;
+                $eror->protocol_id = $protocol->id;
+                $eror->string = "П1 НЕ ВІДПОВІДАЄ П2+П7";
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+
+            }
+
+            if($protocol->p7 != $protocol->p5 + $protocol->p6 && $protocol->act == 0)
+            {
+                $eror = new eror;
+                $eror->protocol_id = $protocol->id;
+                $eror->district_id = $protocol->district_id;
+                $eror->string = "П7 НЕ ВІДПОВІДАЄ П5+П6";
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+            }
+            if($protocol->p11 != $protocol->p9 - $protocol->p10 && $protocol->act == 0)
+            {
+                $eror = new eror;
+                $eror->protocol_id = $protocol->id;
+                $eror->district_id = $protocol->district_id;
+                $eror->string = "П11 НЕ ВІДПОВІДАЄ П9+П10";
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+            }
+
+
+            if($protocol->type != 'Мер')
+            {
+
+            
+
+            $p12_party_sum = p12::where('protocol_id',$protocol->id)->sum('count_voises');
+            $p12_party_sum_p13 = p12::where('protocol_id',$protocol->id)->sum('p13');
+            $p12_party = p12::where('protocol_id',$protocol->id)->get();
+
+
+
+            if($p12_party_sum != $protocol->p11)
+            {
+                $eror = new eror;
+                $eror->protocol_id = $protocol->id;
+                $eror->district_id = $protocol->district_id;
+                $eror->string = "П12 НЕ ВІДПОВІДАЄ П11";
+                $eror->save();
+                $protocol->status = 0;
+                $protocol->save();
+            }
+            
+            foreach($p12_party as $party)
+            {
+                
+                $p14_sum = p14::where('protocol_id',$protocol->id)->where('party_id',$party->party_id)->sum('count_voises');
+                if($party->count_voises != $p14_sum + $party->p13)
+                {
+                    $eror = new eror;
+                    $eror->protocol_id = $protocol->id;
+                    $eror->district_id = $protocol->district_id;
+                    $eror->string = "П12 Партітї ".$party->getParty_by_protocol()->name." НЕ ВІДПОВІДАЄ П13+П14";
+                    $eror->save();
+                    $protocol->status = 0;
+                    $protocol->save();
+                }
+
+                
+                
+            }
+
+            $er = eror::where('protocol_id',$protocol->id)->count();
+
+            if($er == 0)
+            {
+                $protocol->status = 1;
+                $protocol->save();
+            }
+        }
+
+        else
+        {
+        
+    
+                $p12_mayor_sum = pmayor::where('protocol_id',$protocol->id)->sum('count_voises');
+    
+    
+                if($p12_mayor_sum != $protocol->p11)
+                {
+                    $eror = new eror;
+                    $eror->protocol_id = $protocol->id;
+                    $eror->district_id = $protocol->district_id;
+                    $eror->string = "П11 НЕ ВІДПОВІДАЄ П12";
+                    $eror->save();
+                    $protocol->status = 0;
+                    $protocol->save();
+                }
+                
+    
+               
+        
+        $er = eror::where('protocol_id',$protocol->id)->count();
+    
+        if($er == 0)
+        {
+            $protocol->status = 1;
+            $protocol->save();
+        }
+
+        }
+    
+}
 
 }
